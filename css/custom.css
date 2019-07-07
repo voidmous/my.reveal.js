@@ -1,0 +1,43 @@
+.reveal.reveal img
+{
+    border: none;
+    box-shadow: none;
+    max-height: calc(66vh);
+    max-width: calc(66vw);
+}
+
+.reveal section.img_container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.reveal section p img {
+    display: block;
+    margin: auto;
+    height: auto;
+    max-height: 100%;
+    width: auto;
+    max-width: 100%;
+}
+
+.reveal section.img_container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.reveal section img {
+    display: block;
+    margin: auto;
+    height: auto;
+    max-height: 100%;
+    width: auto;
+    max-width: 100%;
+}
+
+.reveal section img { 
+    background: rgba(255, 255, 255, 0.12); 
+    border: 4px solid #eeeeee;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15) 
+}
