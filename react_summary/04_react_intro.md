@@ -1,16 +1,18 @@
 # React
 
-
+<!-- vertical -->
 
 ## JSX
 
-HTML tag must be lower-case
+* HTML tag must be lower-case
+* User-Defined Components Must Be Capitalized
+* Add `import React from 'react';` wherever you use JSX
 
-User-Defined Components Must Be Capitalized
-
-
+<!-- vertical -->
 
 ## `props` and `state`
+
+<!-- vertical -->
 
 ### `props`
 
@@ -34,7 +36,7 @@ class User extends Component {
 
 not modifiable
 
-------
+<!-- vertical -->
 
 **Functional Component**
 
@@ -51,7 +53,7 @@ function User(props) {
 
 It's recommended to use `()` after `return` to avoid subtle syntax error
 
--------
+<!-- vertical -->
 
 `props.children` : [Composition vs Inheritance – React](https://reactjs.org/docs/composition-vs-inheritance.html "")
 
@@ -78,7 +80,7 @@ function WelcomeDialog() {
 }
 ```
 
----
+<!-- vertical -->
 
 `PropTypes`
 
@@ -160,7 +162,7 @@ MyComponent.propTypes = {
 };
 ```
 
-
+<!-- vertical -->
 
 ### `state`
 
@@ -187,29 +189,34 @@ class Clock extends React.Component {
 }
 ```
 
+<!-- vertical -->
+
 **Read**
 
  `this.state.time`
 
 **Write**
 
-`this.setState(data, callback)` React will combine `setState()`  into one change and then invoke callback
+1. ~~`this.state.variable = newVar`~~
+  * only sets value and can't trigger re-render, do not use
 
-`this.state.variable = newVar` only sets value and can't trigger re-render.
+2. `this.setState(newState[, callback])` 
+  * change `this.state` and invoke re-render
+  * React will combine multiple `setState()`  into one change and then run callback
 
----
+
+
+<!-- vertical -->
 
 ###  `props` versus `state`
 
 | Comparison   | `props`                      | `state`                                  |
 | ------------ | ---------------------------- | ---------------------------------------- |
 | Usage        | data from parent to children | inner state of a component               |
-| Modification | unmodifiable ??              | call `setState()` from inside or outside |
+| Modification | unmodifiable                 | call `setState()` from inside or outside |
 |              |                              |                                          |
 
-
-
----
+<!-- vertical -->
 
 ### Context
 
@@ -242,7 +249,7 @@ import PropTypes from 'prop-types';
       }
 ```
 
-
+<!-- vertical -->
 
 ### Action Callback
 
@@ -300,7 +307,7 @@ class UseRef extends React.Component {
 
 [Refs and the DOM – React](https://reactjs.org/docs/refs-and-the-dom.html "")
 
-
+<!-- vertical -->
 
 ## High Order Component
 
@@ -323,7 +330,7 @@ function hoc(Comp) {
 const newComp = hoc(aComp);
 ```
 
-
+<!-- vertical -->
 
 ```jsx
 function transProps(transFunc) {
@@ -338,23 +345,24 @@ function transProps(transFunc) {
 const newAdapter = transProps(transPropsFunc)(aComp);
 ```
 
-
-
-----
+<!-- vertical -->
 
 ## VirtualDOM
 
 ![](public/react-virtual-dom.png )
 
+<!-- vertical -->
+
+TODO: add VDOM and Real DOM image
+
+Note:
 [The Inner Workings Of Virtual DOM – rajaraodv – Medium](https://medium.com/@rajaraodv/the-inner-workings-of-virtual-dom-666ee7ad47cf "")
-
 [How Virtual-DOM and diffing works in React – Gethyl George Kurian – Medium](https://medium.com/@gethylgeorge/how-virtual-dom-and-diffing-works-in-react-6fc805f9f84e "")
-
 [Virtual DOM: How inefficiency can lead to better performance - AFAS Dev](https://dev.afas.nl/blog-dev/virtual-dom-how-inefficiency-can-lead-to-better-performance "")
-
 [Understanding the Virtual DOM](https://bitsofco.de/understanding-the-virtual-dom/ "")
-
 [The Real Benefits of the Virtual DOM in React.js](https://www.accelebrate.com/blog/the-real-benefits-of-the-virtual-dom-in-react-js/ "")
+
+<!-- vertical -->
 
 ## Life Cycle
 
@@ -366,21 +374,25 @@ When will a compoent redraw?
    * `componentWillUpdate()`
    * `render()`
    * `componentDidUpdate()`
+<!-- vertical -->
 2. Own `state` change
    * `shouldComponentUpdate()`
    * `componentWillUpdate()`
    * `render()`
    * `componentDidUpdate()`
+<!-- vertical -->
 3. `this.forceUpdate()`
    * `componentWillUpdate()`
    * `render()`
    * `componentDidUpdate()`
-
+<!-- vertical -->
 
 
 `shouldComponentUpdate()` is mostly used to reduce unnecessary redraw to improve performance, `componentWillReceiveProps()` is generally used to sync new `props` to `state`
 
 `componentWillUnmount()` is used to clean resources 
+
+<!-- vertical -->
 
 ```js
 class WindowWidth extends React.Component {
@@ -408,6 +420,7 @@ class WindowWidth extends React.Component {
     }
 }
 ```
+<!-- vertical -->
 
 [Get and debug event listeners &nbsp;|&nbsp; Web      &nbsp;|&nbsp; Google Developers](https://developers.google.com/web/updates/2015/05/get-and-debug-event-listeners "")
 
@@ -417,7 +430,7 @@ TODO: when will datagrid be unmounted ?
 
 
 
----
+<!-- vertical -->
 
 
 
@@ -425,33 +438,31 @@ TODO: when will datagrid be unmounted ?
 
 
 
----
+<!-- vertical -->
 
 
 
 ![React Life Cycle Process Image](public/react_life_cycle_process.jpg )
 
 
-
----
+<!-- vertical -->
 
 
 
 ![React Life Cycle Process Image](public/react_life_cycle_process.jpg )
 
----
+<!-- vertical -->
 
 ![React setState() correct usage](public/react_setstate_usage.png )
 
----
+<!-- vertical -->
 
 [ReactJs component lifecycle methods — A deep dive – Hacker Noon](https://hackernoon.com/reactjs-component-lifecycle-methods-a-deep-dive-38275d9d13c0 "")
 
 ![:scale 100%](public/react_life_cycle.png)
 
----
+<!-- vertical -->
 
----
 
 ## Data Flow
 
@@ -463,19 +474,19 @@ TODO: when will datagrid be unmounted ?
 
 ![:scale 100%, ](public/why_use_store.png)
 
----
+<!-- vertical -->
 
 ![:scale 100%, Flux Pattern](public/flux_pattern.jpg)
 
----
+<!-- vertical -->
 
 ![:scale 100%, Redux Pattern](public/redux_pattern.jpg)
 
----
+<!-- vertical -->
 
 ![:scale 100%, Flux Versus Redux](public/flux_vs_redux.jpg)
 
----
+<!-- vertical -->
 
 ![:scale 100%, Flux Versus Redux](public/flux_vs_redux_2.png)
 
@@ -527,7 +538,7 @@ store.dispatch({ type: 'DECREMENT' })
 // 1
 ```
 
-
+<!-- vertical -->
 
 Action
 
@@ -547,25 +558,22 @@ Store Enhancer
 
 
 
----
+<!-- vertical -->
 
-
-
----
 
 ## fetch and thunk
 
 ![:scale 100%](public/redux_thunk_1.gif)
 
----
+<!-- vertical -->
 
 ![:scale 100%](public/redux_thunk_2.png)
 
----
+<!-- vertical -->
 
 ![:scale 100%](public/redux_data_flow.png)
 
----
+<!-- vertical -->
 
 [淺談 Redux Thunk](https://www.slideshare.net/ssuserc4dc6d1/redux-thunk "")
 
@@ -595,11 +603,7 @@ timeout(1000, fetch('/hello')).then(function(response) {
 })
 ```
 
-
-
-
-
----
+<!-- vertical -->
 
 ## Usual Component
 
@@ -617,7 +621,7 @@ store
 
 HTML5 Drag and Drop
 
-
+<!-- vertical -->
 
 ### `classnames`
 
@@ -634,9 +638,7 @@ TODO: add real example
 
 
 
----
-
-
+<!-- vertical -->
 
 ### Integrate with jQuery
 
@@ -655,6 +657,4 @@ $(rootELe).on('hidden.bs.modal', this.handleHidden);
 
 
 
----
-
-
+<!-- vertical -->

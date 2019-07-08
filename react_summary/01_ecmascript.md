@@ -1,52 +1,41 @@
-# ECMA
+## ECMA
 
 European Computer Manufacturers Association
 
----
+<!-- vertical -->
 
-## ECMAScript & JavaScript
+### ECMAScript & JavaScript
 
-JavaScript is an implementation of the ECMAScript standard.
+> **ECMAScript** (or **ES**) is a [scripting-language](https://en.wikipedia.org/wiki/Scripting-language) [specification](https://en.wikipedia.org/wiki/Specification_(technical_standard)) standardized by [Ecma International](https://en.wikipedia.org/wiki/Ecma_International) in **ECMA-262** and ISO/IEC 16262. It was created to standardize [JavaScript](https://en.wikipedia.org/wiki/JavaScript), so as to foster multiple independent implementations. JavaScript has remained the best-known implementation of ECMAScript since the standard was first published, with other well-known implementations including [JScript](https://en.wikipedia.org/wiki/JScript) and [ActionScript](https://en.wikipedia.org/wiki/ActionScript).
 
+Note: [ECMAScript - Wikipedia](https://en.wikipedia.org/wiki/ECMAScript "")
 
+<!-- vertical -->
 
-![:scale 100%](https://adrianmejia.com/images/history-javascript-evolution-es6.png)
+![:history-javascript-evolution-es6](https://adrianmejia.com/images/history-javascript-evolution-es6.png)
 
-[What’s the difference between JavaScript and ECMAScript?](https://www.freecodecamp.org/news/whats-the-difference-between-javascript-and-ecmascript-cba48c73a2b5/ "")
-
-
-
----
-
-
+<!-- vertical -->
 
 [The TC39 Process](https://tc39.github.io/process-document/ "")
 
-![:scale 70%](public/ecmascript_tc39.png)
+![ecmascript_tc39](public/ecmascript_tc39.png)
+
+Note: [tc39/proposals: Tracking ECMAScript Proposals](https://github.com/tc39/proposals "")
 
 
-
-[tc39/proposals: Tracking ECMAScript Proposals](https://github.com/tc39/proposals "")
-
-
-
----
-
-
+<!-- horizontal -->
 
 ## ECMAScript Syntax
 
 
-
----
-
+<!-- vertical -->
 
 
 ## regex
 
 
 
----
+<!-- vertical -->
 
 
 
@@ -54,7 +43,7 @@ JavaScript is an implementation of the ECMAScript standard.
 
 
 
----
+<!-- vertical -->
 
 
 
@@ -75,17 +64,14 @@ function foo() {console.log('a');}() // Uncaught SyntaxError: Unexpected token )
 // undefined
 ```
 
+
 [javascript - What does the exclamation mark do before the function? - Stack Overflow](https://stackoverflow.com/questions/3755606/what-does-the-exclamation-mark-do-before-the-function "")
 
 [Javascript “Bang, Bang. I shot you down” - Use of double bangs (!!) in Javascript.](https://medium.com/swlh/javascript-bang-bang-i-shot-you-down-use-of-double-bangs-in-javascript-7c9d94446054 "")
 
 **the double-bang returns the boolean true/false association** of a value.
 
-
-
----
-
-
+<!-- vertical -->
 
 ### JSON
 
@@ -94,61 +80,53 @@ JSON syntax is a subset of JavaScript object expression.
 * string must be encapsulated with quote
 * no comments allowed
 * `JSON.stringify()` and `JSON.parse()`
-
 * `package.json` and user favorite
+* VS Code syntax check ??
+
+<!-- vertical -->
 
 
-
----
-
-
-
+A simple `package.json`
 ```json
 {
-  "name": "npm-start",
-  "version": "1.0.0",
-  "description": "init",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "foobar",
-  "license": "ISC",
-  "keywords": [
-    "react",
-    "node"
-  ]
+	"name": "npm-start",
+	"version": "1.0.0",
+	"description": "init",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "foobar",
+	"license": "ISC",
+	"keywords": [
+		"react",
+		"node"
+	]
 }
 ```
 
-
-
----
-
-
+<!-- vertical -->
 
 ### JavaScript Object
 
 ```javascript
-let home = "home ";
+let home = "home address";
 let phone = "123456";
 
-let aman = {first_name: "fname",
-'middle name': "mname",
-"last name": "lname",
-[home + "address"]: "hz",
-phone
+let person = {
+	"first name"  :   "fname",
+	'middle name' :   "mname",
+	last_name     :   "lname",
+	[home]        :   "hangzhou",
+	phone
 };
-JSON.stringify(aman);
-/* "{"first_name":"fname","middle name":"mname","last name":"lname",
-"home address":"hz","phone":"123456"}" */
+JSON.stringify(person);
+/* {"first name":"fname","middle name":"mname",
+"last_name":"lname","home address":"hangzhou",
+"phone":"123456"} */
 ```
 
-
-
----
-
-
+<!-- vertical -->
 
 Array is special object with numerical keys
 
@@ -170,11 +148,7 @@ console.log(arr1); // ["a", "b", "c", "d", "e"]
 console.log(arr2); // ["a", "b", "c", "c1", "e"]
 ```
 
-
-
----
-
-
+<!-- vertical -->
 
 ### `Object.assign`
 
@@ -206,19 +180,13 @@ console.log(target2);
 
 
 
----
-
-
+<!-- vertical -->
 
 ### `var`, `let` and `const`
 
 ![A chart comparing the similarities and differences between const let and var](public/const-vs-let-vs-var.png )
 
-
-
----
-
-
+<!-- vertical -->
 
 ```javascript
 var a = 'a';
@@ -272,15 +240,13 @@ for (let l = 1; l < 3; l++) {
 console.log(l); // Uncaught ReferenceError: l is not defined
 ```
 
----
+<!-- vertical -->
 
 Always define variable as `const`, use `let` unless you know its reference will be changed.
 
 [javascript - What's the difference between using "let" and "var"? - Stack Overflow](https://stackoverflow.com/questions/762011/whats-the-difference-between-using-let-and-var "")
 
-
-
----
+<!-- vertical -->
 
 
 
@@ -370,7 +336,8 @@ module
 
 
 
----
+<!-- vertical -->
+
 
 ### Rest/Spread `...`
 
@@ -382,10 +349,7 @@ module
 
 
 
----
-
-
-
+<!-- vertical -->
 ```js
 // Rest properties collect the remaining own enumerable property keys 
 // that are not already picked off by the destructuring pattern. Those 
@@ -400,25 +364,20 @@ z; // { a: 3, b: 4 }
 let n = { x, y, ...z };
 n; // { x: 1, y: 2, a: 3, b: 4 }
 ```
+<!-- vertical -->
 
-
-
----
 
 
 
 ### Functional Programming
 
+- **`forEach()`:** doesn't return anything, but lets you do something with each original value
 - **`map()`**: creates a new array with one value for each item in the original array
 - **`filter()`:** creates a new array containing only the original values where the callback returned `true`
-- **`forEach()`:** doesn't return anything, but lets you do something with each original value
 - **`reduce()`:** produces one new value based on the contents of the original array
 
 
-
----
-
-
+<!-- vertical -->
 
 ```js
 // map, reduce, filter
@@ -446,9 +405,8 @@ const sum = values.reduce(addNumbers, 0);
 // 39
 ```
 
+<!-- vertical -->
 
-
----
 
 
 
@@ -499,8 +457,7 @@ TODO: [Swift Guide to Map Filter Reduce](https://useyourloaf.com/blog/swift-guid
 
 ![Java 8 Streams Cheat Sheet](https://jrebel.com/wp-content/uploads/2016/01/Java-8-Streams-cheat-sheet-v3.png )
 
----
-
+<!-- vertical -->
 
 
 ```js
@@ -532,26 +489,25 @@ add1ThenDouble(2); // 6
 
 
 
----
-
+<!-- horizontal -->
 
 
 ### Module
 
+* CommonJS
+* ES6 Module
+* Others ??
 
-
----
-
+<!-- vertical -->
 
 
 #### CommonJS
 
----
+<!-- vertical -->
 
 #### ES6 Module
 
 `export`
-
 ```javascript
 // circle.js
 const PI = 3.14;
@@ -565,14 +521,9 @@ export default const function(r) { // only one default export
 }
 ```
 
-
-
----
-
-
+<!-- vertical -->
 
 `import`
-
 ```javascript
 import length, {PI, circle_area as area} from './circle';
 PI;
@@ -582,12 +533,7 @@ length(2);
 import React, {Component, PropTypes} from 'react';
 ```
 
-
-
----
-
-
-
+<!-- vertical -->
 
 
 ## Debug Tricks

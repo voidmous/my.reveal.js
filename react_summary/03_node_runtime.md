@@ -1,10 +1,10 @@
 # Node.js
 
+> Node.js is an open-source, cross-platform JavaScript run-time environment that executes JavaScript code outside of a browser. 
 
+<!-- vertical -->
 
 ## npm (Node Package Manager)
-
-
 
 ```graphviz
 digraph {
@@ -21,31 +21,38 @@ digraph {
 }
 ```
 
+Note:
+```graphviz
+digraph {
+    start [shape=circle label=< > width=0.5 style=filled]
+    pkgjson [label=<package.json> shape=box]
+    pkglock [label=<package-lock.json<br/>package.json> shape=box]
+    pkgshrink [label=<npm-shrinkwrap.json<br/>package.json> shape=box]
+    yarn [label=<yarn-lock.json<br/>package.json> shape=box]
 
+    start -> pkgjson [label=<npm init -y> labelfontcolor="red"]
+    pkgjson -> yarn [label=<yarn add pkg>]
+    pkgjson -> pkglock [label=<npm install>]
+    pkglock -> pkgshrink [label=<npm shrinkwrap>]
+}
+```
 
-
-
----
-
+<!-- vertical -->
 
 
 ### package.json
 
 A package should have `package.json` file
 
-* `name`: mandatory
-* `version`: `MajorVersion.MinorVersion.Patch`
-* `main`: mandatory, relative path to package directory
-* `engines`: Node version requirement
-* `scripts`: customize command, `npm run <script>`
-* `dependencies`: necessary for running code, `npm install --save <pkg>`
-* `devDependencies`: necessary for running DEV tools (babel transpile, webpack toolchain, lint, test), `npm install --save-dev <pkg>`
+* **name**: mandatory
+* **version**: `MajorVersion.MinorVersion.Patch`
+* **main**: mandatory, relative path to package directory
+* **engines`**: Node version requirement
+* **scripts**: customize command, `npm run <script>`
+* **dependencies**: necessary for running code, `npm install --save <pkg>`
+* **devDependencies**: necessary for running DEV tools (babel transpile, webpack toolchain, lint, test), `npm install --save-dev <pkg>`
 
-
-
----
-
-
+<!-- vertical -->
 
 Difference between run in command line and run script in `package.json`?
 
@@ -63,11 +70,7 @@ digraph G {
 }
 ' />
 
-
-
----
-
-
+<!-- vertical -->
 
 scripts `pre-` and `post-` hook
 
@@ -79,9 +82,7 @@ scripts `pre-` and `post-` hook
 }
 ```
 
-
-
----
+<!-- vertical -->
 
 ## npx (Node Package Executor ??)
 
@@ -91,7 +92,7 @@ scripts `pre-` and `post-` hook
 
 [javascript - Difference between npx and npm? - Stack Overflow](https://stackoverflow.com/questions/50605219/difference-between-npx-and-npm "")
 
----
+<!-- vertical -->
 
 ## [Babel](https://babeljs.io/ "")
 
@@ -104,15 +105,14 @@ scripts `pre-` and `post-` hook
 [babel-preset - npm search](https://www.npmjs.com/search?q=babel-preset "")
 
 ```shell
-npm install --save-dev babel-preset-react
-npm install --save-dev babel-preset-es2015
-npm install --save-dev babel-preset-stage-0
+$ npm install --save-dev babel-preset-react
+$ npm install --save-dev babel-preset-es2015
+$ npm install --save-dev babel-preset-stage-0
 ```
 
----
+<!-- vertical -->
 
 `.babelrc`
-
 ```javascript
 {
   "presets": [
@@ -130,18 +130,15 @@ babel example.js --out-file compiled.js
 npm install --global babel-cli
 babel-node // ES6 REPL
 ```
-
-
-
----
+<!-- vertical -->
 
 ### babel-polyfill
 
 > A polyfill is a piece of code (usually JavaScript on the Web) used to provide modern functionality on older browsers that do not natively support it.
->
-> [Polyfill - MDN Web Docs Glossary: Definitions of Web-related terms | MDN](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill "")
 
----
+Note: [Polyfill - MDN Web Docs Glossary: Definitions of Web-related terms | MDN](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill "")
+
+<!-- vertical -->
 
 Support new API:
 
@@ -155,15 +152,15 @@ import 'babel-polyfill'
 require('babel-polyfill')
 ```
 
----
-
-
+<!-- horizontal -->
 
 ## Webpack
 
+<!-- vertical -->
+
 ### Concepts
 
-* Entry
+#### Entry
 
 ```js
 module.exports = {
@@ -174,9 +171,9 @@ module.exports = {
 };
 ```
 
+<!-- vertical -->
 
-
-* Output
+#### Output
 
 there can be multiple `entry` points, only one `output` configuration is specified.
 
@@ -204,11 +201,13 @@ module.exports = {
 ```
 
 
+#### Plugin
 
-* Plugin
-* Module
+<!-- vertical -->
 
+#### Module
 
+<!-- vertical -->
 
 #### CSS processing
 
@@ -225,7 +224,7 @@ HtmlWebpackPlugin
 
 
 
----
+<!-- vertical -->
 
 ### Hot Module Replacement
 
@@ -242,8 +241,3 @@ HtmlWebpackPlugin
 ## ESLint
 
 `eslint --init`
-
-
-
----
-

@@ -12,7 +12,12 @@
 		<link rel="stylesheet" href="css/theme/custom.css">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+		<!--
+			URL: https://highlightjs.org/download/
+			DEMO: https://highlightjs.org/static/demo/
+		-->
+		<!-- <link rel="stylesheet" href="lib/css/dracula.css"> -->
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/github.min.css">
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -26,15 +31,29 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section data-markdown="http://localhost:8000/react_summary/01_ecmascript.md" >
+				<section data-markdown="http://localhost:8000/react_summary/01_ecmascript.md" 
+						data-separator="^<.*horizontal.*>$"
+						data-separator-vertical="^<.*vertical.*>$"
+						data-separator-notes="^Note?:"
+						data-charset="utf-8">
 				</section>
-				<section data-markdown="http://localhost:8000/react_summary/03_node_runtime.md" >
+				<section data-markdown="http://localhost:8000/react_summary/03_node_runtime.md" 
+						data-separator="^<.*horizontal.*>$"
+						data-separator-vertical="^<.*vertical.*>$"
+						data-separator-notes="^Note?:"
+						data-charset="utf-8">
+				</section>
+				<section data-markdown="http://localhost:8000/react_summary/04_react_intro.md" 
+						data-separator="^<.*horizontal.*>$"
+						data-separator-vertical="^<.*vertical.*>$"
+						data-separator-notes="^Note?:"
+						data-charset="utf-8">
 				</section>
 				<section data-markdown="http://localhost:8000/react_summary/05_reference.md"
-							data-separator="^\n\n\n"
-							data-separator-vertical="^\n\n"
-							data-separator-notes="^Note:"
-							data-charset="utf-8">
+						data-separator="^<.*horizontal.*>$"
+						data-separator-vertical="^<.*vertical.*>$"
+						data-separator-notes="^Note?:"
+						data-charset="utf-8">
 					<!--
 						Note that Windows uses `\r\n` instead of `\n` as its linefeed character.
 						For a regex that supports all operating systems, use `\r?\n` instead of `\n`.
@@ -49,21 +68,43 @@
 			// - https://github.com/hakimel/reveal.js#configuration
 			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
-				width: 960,
-				height: 700,
+				// The "normal" size of the presentation, aspect ratio will be preserved
+				// when the presentation is scaled to fit different resolutions. Can be
+				// specified using percentage units.
+				width: 1024,
+				height: 768,
+				// Factor of the display size that should remain empty around the content
 				margin: 0.1,
+				// Bounds for smallest/largest possible scale to apply to content
 				minScale: 0.2,
 				maxScale: 1.2,
 				transition: "slide",
 				transitionSpeed: 'slow',
 				highlightTheme: "monokai",
+				// Turns fragments on and off globally
+				fragments: true,
+				// Flags whether to include the current fragment in the URL,
+				// so that reloading brings you to the same fragment position
+				fragmentInURL: true,
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
 				hash: true,
-				slideNumber: "h/v",
+				// Slide number formatting can be configured using these variables:
+				//  "h.v": 	horizontal . vertical slide number (default)
+				//  "h/v": 	horizontal / vertical slide number
+				//    "c": 	flattened slide number
+				//  "c/t": 	flattened slide number / total slides
+				slideNumber: "c/t",
 				dependencies: [
+					// Interpret Markdown in <section> elements
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
+					// Speaker notes
 					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true }
+					// Syntax highlight for <code> elements
+					{ src: 'plugin/highlight/highlight.js', async: true },
+					// MathJax
+					{ src: 'plugin/math/math.js', async: true }
 				],
 				// Options which are passed into marked
 				// See https://marked.js.org/#/USING_ADVANCED.md#options
