@@ -6,7 +6,7 @@ European Computer Manufacturers Association
 
 ### ECMAScript & JavaScript
 
-> **ECMAScript** (or **ES**) is a [scripting-language](https://en.wikipedia.org/wiki/Scripting-language) [specification](https://en.wikipedia.org/wiki/Specification_(technical_standard)) standardized by [Ecma International](https://en.wikipedia.org/wiki/Ecma_International) in **ECMA-262** and ISO/IEC 16262. It was created to standardize [JavaScript](https://en.wikipedia.org/wiki/JavaScript), so as to foster multiple independent implementations. JavaScript has remained the best-known implementation of ECMAScript since the standard was first published, with other well-known implementations including [JScript](https://en.wikipedia.org/wiki/JScript) and [ActionScript](https://en.wikipedia.org/wiki/ActionScript).
+> **ECMAScript** (or **ES**) is a scripting-language specification standardized by [Ecma International](https://en.wikipedia.org/wiki/Ecma_International) in **ECMA-262** and ISO/IEC 16262. It was created to standardize [JavaScript](https://en.wikipedia.org/wiki/JavaScript), so as to foster multiple independent implementations. JavaScript has remained the best-known implementation of ECMAScript since the standard was first published, with other well-known implementations including [JScript](https://en.wikipedia.org/wiki/JScript) and [ActionScript](https://en.wikipedia.org/wiki/ActionScript).
 
 Note: [ECMAScript - Wikipedia](https://en.wikipedia.org/wiki/ECMAScript "")
 
@@ -27,25 +27,52 @@ Note: [tc39/proposals: Tracking ECMAScript Proposals](https://github.com/tc39/pr
 
 ## ECMAScript Syntax
 
+<!-- vertical -->
+
+### `==` and `===`
+
+* `===` and `!==` are strict equal/unequal for primitive types
+* `==` and `!=` will do implicit type conversion before comparison
+* you should use `===` in most cases
+
+```js
+0 ==  false        // true
+0 === false        // false, because they are of a different type
+1 ==  "1"          // true, automatic type conversion for value only
+1 === "1"          // false, different type
+null ==  undefined // true
+null === undefined // false
+'0' == false       // ture
+'0' === false      // false
+```
+
+Note:
+[Which equals operator (== vs ===) should be used in JavaScript comparisons? - Stack Overflow](https://stackoverflow.com/questions/359494/which-equals-operator-vs-should-be-used-in-javascript-comparisons "")
+[Equality comparisons and sameness - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness "")
 
 <!-- vertical -->
 
+For reference type, `==` and `===` are identical except:
 
-## regex
+```js
+var a = [1,2,3];
+var b = [1,2,3];
 
+var c = { x: 1, y: 2 };
+var d = { x: 1, y: 2 };
 
+a == b            // false
+a === b           // false
+
+c == d            // false
+c === d           // false
+
+// Special case
+"abc" == new String("abc")    // true
+"abc" === new String("abc")   // false
+```
 
 <!-- vertical -->
-
-
-
-## object.assign
-
-
-
-<!-- vertical -->
-
-
 
 `!! function() {}`
 
@@ -268,13 +295,13 @@ Always define variable as `const`, use `let` unless you know its reference will 
 
 ### Function extension
 
-#### Arrow Function (lambda)
+#### Arrow Function
 
-```js
-function
-```
+automatic this binding
 
----
+
+
+<!-- vertical -->
 
 #### Default parameter
 
@@ -288,13 +315,10 @@ append(1); //[1]
 append(2); //[2], not [1, 2]
 ```
 
-
-
+Note:
 [Default parameters - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters "")
 
----
-
-
+<!-- vertical -->
 
 ### Object extension
 
@@ -304,7 +328,7 @@ var baz = {foo};
 baz // {foo: "bar"}
 ```
 
----
+<!-- vertical -->
 
 
 
@@ -318,19 +342,18 @@ module
 
 
 
----
-
+<!-- vertical -->
 
 
 ### decorator
 
 
 
----
+<!-- vertical -->
 
 
 
-### **Destructuring assignment**
+### **Destructuring Assignment**
 
 [Destructuring assignment - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment "")
 
@@ -341,15 +364,6 @@ module
 
 ### Rest/Spread `...`
 
-[Spread syntax - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax "")
-
-[Rest parameters - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters "")
-
-[tc39/proposal-object-rest-spread: Rest/Spread Properties for ECMAScript](https://github.com/tc39/proposal-object-rest-spread "")
-
-
-
-<!-- vertical -->
 ```js
 // Rest properties collect the remaining own enumerable property keys 
 // that are not already picked off by the destructuring pattern. Those 
@@ -366,15 +380,22 @@ n; // { x: 1, y: 2, a: 3, b: 4 }
 ```
 <!-- vertical -->
 
+[Spread syntax - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax "")
 
+[Rest parameters - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters "")
+
+[tc39/proposal-object-rest-spread: Rest/Spread Properties for ECMAScript](https://github.com/tc39/proposal-object-rest-spread "")
+
+
+<!-- vertical -->
 
 
 ### Functional Programming
 
-- **`forEach()`:** doesn't return anything, but lets you do something with each original value
+- **`forEach()`**: doesn't return anything, but lets you do something with each original value
 - **`map()`**: creates a new array with one value for each item in the original array
-- **`filter()`:** creates a new array containing only the original values where the callback returned `true`
-- **`reduce()`:** produces one new value based on the contents of the original array
+- **`filter()`**: creates a new array containing only the original values where the callback returned `true`
+- **`reduce()`**: produces one new value based on the contents of the original array
 
 
 <!-- vertical -->
@@ -408,8 +429,6 @@ const sum = values.reduce(addNumbers, 0);
 <!-- vertical -->
 
 
-
-
 #### Pure Function
 
 * It returns the same result if given the same arguments
@@ -417,15 +436,7 @@ const sum = values.reduce(addNumbers, 0);
 
 
 
----
-
-
-
-#### Immutability
-
-
-
----
+<!-- vertical -->
 
 
 
@@ -437,12 +448,10 @@ Functions as first-class entities can:
 - pass it as a parameter to other functions
 - return it as result from other functions
 
+Note:
 [Functional Programming Principles in Javascript](https://www.freecodecamp.org/news/functional-programming-principles-in-javascript-1b8fc6c3563f/ "")
 
-
-
----
-
+<!-- vertical -->
 
 
 #### `map`, `reduce`, `filter` Javascript Array Methods
@@ -534,11 +543,3 @@ import React, {Component, PropTypes} from 'react';
 ```
 
 <!-- vertical -->
-
-
-## Debug Tricks
-
-```js
-console.info("output variable", window.Date());
-
-```
