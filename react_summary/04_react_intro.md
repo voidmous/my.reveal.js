@@ -84,12 +84,6 @@ function WelcomeDialog() {
 
 `PropTypes`
 
-Props type check only works in development mode, ignored in production
-
-TODO add images when props check failed
-
-<!-- vertical -->
-
 ```js
 import PropTypes from 'prop-types';
 // import {PropTypes} from 'react'; // before react 15.5
@@ -116,28 +110,36 @@ MyComponent.propTypes = {
 
 <!-- vertical -->
 
+Props type check only works in development mode, ignored in production
+![type_not_correct](https://miro.medium.com/max/700/1*2hNYLJwWy8HmtCIx6IlJtA.png )
+![type_required](https://miro.medium.com/max/700/1*oAd6bPB2nZNxTlIbS76tpg.png )
+![value_out_of_range](https://miro.medium.com/max/700/1*LCQLViu_UwprZEiDuM3Q3w.png )
+
+<!-- vertical -->
+
+
 ### `state`
 
 **Declaration**
 
 ```jsx
 class Clock extends React.Component {
-    state = {
-        time: 0
-    }
-    
-    componentDidMount() {
-        this.id = setInterval(() => {
-            this.setState({time: this.state.time + 1}, () => {
-                console.log('callback ' + this.state.time); // return 1 after setState
-            })
-        }, 1000); // will run asynchronously
-        console.log('subsequence ' + this.state.time); // return 0 instead of 1
-    }
-    
-    render() {
-        return <div>{this.state.time}</div>
-    }
+	state = {
+		time: 0
+	}
+
+	componentDidMount() {
+		this.id = setInterval(() => {
+			this.setState({ time: this.state.time + 1 }, () => {
+				console.log('callback ' + this.state.time); // return 1 after setState
+			})
+		}, 1000); // will run asynchronously
+		console.log('subsequence ' + this.state.time); // return 0 instead of 1
+	}
+
+	render() {
+		return <div>{this.state.time}</div>
+	}
 }
 ```
 
