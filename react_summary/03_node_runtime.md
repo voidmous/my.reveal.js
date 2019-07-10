@@ -4,22 +4,16 @@
 
 <!-- vertical -->
 
-## npm (Node Package Manager)
+## Package Manager
 
-```graphviz
-digraph {
-    start [shape=circle label=< > width=0.5 style=filled]
-    pkgjson [label=<package.json> shape=box]
-    pkglock [label=<package-lock.json<br/>package.json> shape=box]
-    pkgshrink [label=<npm-shrinkwrap.json<br/>package.json> shape=box]
-    yarn [label=<yarn-lock.json<br/>package.json> shape=box]
+* [npm | build amazing things](https://www.npmjs.com/ "")
+  - Install with correct access level
+* [Yarn](https://yarnpkg.com/zh-Hant/ "")
+  - Recommended
 
-    start -> pkgjson [label=<npm init -y> labelfontcolor="red"]
-    pkgjson -> yarn [label=<yarn add pkg>]
-    pkgjson -> pkglock [label=<npm install>]
-    pkglock -> pkgshrink [label=<npm shrinkwrap>]
-}
-```
+<!-- vertical -->
+
+![NPM vs Yarn](public/npm_yarn.svg)
 
 Note:
 ```graphviz
@@ -47,7 +41,7 @@ A package should have `package.json` file
 * **name**: mandatory
 * **version**: `MajorVersion.MinorVersion.Patch`
 * **main**: mandatory, relative path to package directory
-* **engines`**: Node version requirement
+* **engines**: Node version requirement
 * **scripts**: customize command, `npm run <script>`
 * **dependencies**: necessary for running code, `npm install --save <pkg>`
 * **devDependencies**: necessary for running DEV tools (babel transpile, webpack toolchain, lint, test), `npm install --save-dev <pkg>`
@@ -55,20 +49,6 @@ A package should have `package.json` file
 <!-- vertical -->
 
 Difference between run in command line and run script in `package.json`?
-
-<img src='https://g.gravizo.com/svg?
-digraph G {
-    start [shape=circle, label="", width=0.5,style=filled];
-    start -> pkgjson [label="npm init -y",fontcolor="red"];
-    pkgjson [label="package.json",shape=box];
-    pkgjson -> yarn [label="yarn add pkg"];
-    yarn [label="yarn-lock.json\npackage.json",shape=box];
-    pkgjson -> pkglock [label="npm install"];
-    pkglock [label="package-lock.json\npackage.json",shape=box];
-    pkglock -> pkgshrink [label="npm shrinkwrap"];
-    pkgshrink [label="npm-shrinkwrap.json\npackage.json",shape=box];
-}
-' />
 
 <!-- vertical -->
 

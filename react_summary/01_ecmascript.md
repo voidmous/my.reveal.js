@@ -104,11 +104,18 @@ function foo() {console.log('a');}() // Uncaught SyntaxError: Unexpected token )
 
 JSON syntax is a subset of JavaScript object expression.
 
-* string must be encapsulated with quote
+* subset of JavaScript object syntax
+* string (key and value) must be encapsulated with double quote
 * no comments allowed
 * `JSON.stringify()` and `JSON.parse()`
 * `package.json` and user favorite
+* [JSON.org](https://www.json.org/ "")
 * VS Code syntax check ??
+
+
+Note:
+[specifications - Do the JSON keys have to be surrounded by quotes? - Stack Overflow](https://stackoverflow.com/questions/949449/do-the-json-keys-have-to-be-surrounded-by-quotes "")
+[javascript - jQuery.parseJSON single quote vs double quote - Stack Overflow](https://stackoverflow.com/questions/14355655/jquery-parsejson-single-quote-vs-double-quote "")
 
 <!-- vertical -->
 

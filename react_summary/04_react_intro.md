@@ -388,15 +388,8 @@ TODO: when will datagrid be unmounted ?
 
 
 
-<img src="public/react_life_cycle_process.jpg" alt="" style="background:none; border:none; box-shadow:none;" height="600px"/>
+<img src="public/react_life_cycle_process.jpg" alt="" style="background:none; border:none; box-shadow:none;" height="700px"/>
 
-
-
-<!-- vertical -->
-
-
-
-![React Life Cycle Process Image](public/react_life_cycle_process.jpg )
 
 
 <!-- vertical -->
@@ -411,9 +404,9 @@ TODO: when will datagrid be unmounted ?
 
 <!-- vertical -->
 
-[ReactJs component lifecycle methods — A deep dive – Hacker Noon](https://hackernoon.com/reactjs-component-lifecycle-methods-a-deep-dive-38275d9d13c0 "")
-
 ![:scale 100%](public/react_life_cycle.png)
+
+Note: [ReactJs component lifecycle methods — A deep dive – Hacker Noon](https://hackernoon.com/reactjs-component-lifecycle-methods-a-deep-dive-38275d9d13c0 "")
 
 <!-- vertical -->
 
@@ -424,7 +417,7 @@ TODO: when will datagrid be unmounted ?
 
 [How Redux Works: A Counter-Example ](https://daveceddia.com/how-does-redux-work/ "") ✔✔✔✔
 
-
+<!-- vertical -->
 
 ![:scale 100%, ](public/why_use_store.png)
 
@@ -434,7 +427,7 @@ TODO: when will datagrid be unmounted ?
 
 <!-- vertical -->
 
-![:scale 100%, Redux Pattern](public/redux_pattern.jpg)
+![:scale 100%, Redux Pattern](public/redux_pattern.jpg) <!-- height="700px" -->
 
 <!-- vertical -->
 
@@ -506,7 +499,34 @@ Reducer
 
 Dispatcher
 
+<!-- vertical -->
+
 Middleware
+
+```js
+/**
+ * Logs all actions and states after they are dispatched.
+ */
+const logger = store => next => action => {
+  console.group(action.type)
+  console.info('dispatching', action)
+  let result = next(action)
+  console.log('next state', store.getState())
+  console.groupEnd(action.type)
+  return result
+}
+
+let createStoreWithMiddleware = applyMiddleware(logger)(createStore)
+
+let yourApp = combineReducers(reducers)
+let store = createStoreWithMiddleware(yourApp)
+```
+
+Note:
+[javascript - While debugging, can I have access to the Redux store from the browser console? - Stack Overflow](https://stackoverflow.com/questions/34373462/while-debugging-can-i-have-access-to-the-redux-store-from-the-browser-console "")
+
+
+<!-- vertical -->
 
 Store Enhancer
 
