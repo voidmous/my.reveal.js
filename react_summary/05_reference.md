@@ -49,6 +49,8 @@
 
 # Misc
 
+GWT in Action
+
 [Reactathon Presentation: Redux Fundamentals ·  Mark's Dev Blog  ](https://blog.isquaredsoftware.com/2018/03/presentation-reactathon-redux-fundamentals/ "")
 
 [  How to learn React.js in 2019 - RWieruch  ](https://www.robinwieruch.de/learn-react-js/ "")

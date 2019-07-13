@@ -29,6 +29,84 @@ Note: [tc39/proposals: Tracking ECMAScript Proposals](https://github.com/tc39/pr
 
 <!-- vertical -->
 
+### `var`, `let` and `const`
+
+![A chart comparing the similarities and differences between const let and var](public/const-vs-let-vs-var.png )
+
+Always define variable as `const`, use `let` unless you know its reference will be changed.
+
+<!-- vertical -->
+
+```javascript
+var a = 'a';
+let b = 'b';
+const c = {'c':'c'};
+
+// global scope
+window.a // "a"
+window.b // undefined
+window.c // undefined
+
+// can be reassigned
+a = 'a1'; // "a1"
+b = 'b1'; // "b1"
+c = 'c1'; // Uncaught TypeError: Assignment to constant variable.
+c.c = 'd'; // {c: "d"}
+
+```
+
+<!-- vertical -->
+
+```js
+
+// function scope
+let fun = function () {
+	var i = 1;
+	let j = 2;
+	const k = 3;
+	console.log(i);
+	console.log(j);
+	console.log(k);
+}
+fun(); // 1 2 3
+console.log(i); // Uncaught ReferenceError: i is not defined
+console.log(j); // Uncaught ReferenceError: j is not defined
+console.log(k); // Uncaught ReferenceError: k is not defined
+
+```
+
+<!-- vertical -->
+
+```js
+
+// block scope 1
+{
+	var x = 4;
+	let y = 5;
+	const z = 6;
+}
+console.log(x); // 4
+console.log(y); // Uncaught ReferenceError: y is not defined
+console.log(z); // Uncaught ReferenceError: z is not defined
+
+// block scope 2
+for (var v = 1; v < 3; v++) {
+	var v_ = v;
+}
+console.log(v);  // 3
+console.log(v_); // 2
+
+for (let t = 1; t < 3; t++) {
+	let t_ = t;
+}
+console.log(t);  // Uncaught ReferenceError: t is not defined
+console.log(t_); // Uncaught ReferenceError: t_ is not defined
+```
+
+
+
+<!-- vertical -->
+
 ### `==` and `===`
 
 * `===` and `!==` are strict equal/unequal for primitive types
@@ -47,6 +125,7 @@ null === undefined // false
 ```
 
 Note:
+
 [Which equals operator (== vs ===) should be used in JavaScript comparisons? - Stack Overflow](https://stackoverflow.com/questions/359494/which-equals-operator-vs-should-be-used-in-javascript-comparisons "")
 [Equality comparisons and sameness - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness "")
 
@@ -74,51 +153,37 @@ c === d           // false
 
 <!-- vertical -->
 
-`!! function() {}`
+`!!function(){}`
 
 ```js
-function foo() {console.log('a');} // undefined
-!function foo() {console.log('a');} // false
-function foo() {console.log('a');}() // Uncaught SyntaxError: Unexpected token )
+ function foo() {console.log('a');} // undefined
+!function foo() {console.log('a');} 
+// false, ! turns function declartion to an function expression
+
+ function foo() {console.log('a');}() // Uncaught SyntaxError: Unexpected token )
 !function foo() {console.log('a');}() 
 // a
 // true
 !!function foo() {console.log('a');}()
 // a
 //false
-(function foo() {console.log('a');})()
+(function foo() {console.log('a');})() // IIFE returns undefined by default
 // a
 // undefined
 ```
 
+the double-bang `!!` returns the boolean true/false association of a value.
+
+Note:
 
 [javascript - What does the exclamation mark do before the function? - Stack Overflow](https://stackoverflow.com/questions/3755606/what-does-the-exclamation-mark-do-before-the-function "")
-
 [Javascript “Bang, Bang. I shot you down” - Use of double bangs (!!) in Javascript.](https://medium.com/swlh/javascript-bang-bang-i-shot-you-down-use-of-double-bangs-in-javascript-7c9d94446054 "")
 
-**the double-bang returns the boolean true/false association** of a value.
+
 
 <!-- vertical -->
 
 ### JSON
-
-JSON syntax is a subset of JavaScript object expression.
-
-* subset of JavaScript object syntax
-* string (key and value) must be encapsulated with double quote
-* no comments allowed
-* `JSON.stringify()` and `JSON.parse()`
-* `package.json` and user favorite
-* [JSON.org](https://www.json.org/ "")
-* VS Code syntax check ??
-
-
-Note:
-[specifications - Do the JSON keys have to be surrounded by quotes? - Stack Overflow](https://stackoverflow.com/questions/949449/do-the-json-keys-have-to-be-surrounded-by-quotes "")
-[javascript - jQuery.parseJSON single quote vs double quote - Stack Overflow](https://stackoverflow.com/questions/14355655/jquery-parsejson-single-quote-vs-double-quote "")
-
-<!-- vertical -->
-
 
 A simple `package.json`
 ```json
@@ -141,7 +206,18 @@ A simple `package.json`
 
 <!-- vertical -->
 
-### JavaScript Object
+* **J**ava**S**cript **O**bject **N**otation is a subset of JavaScript object syntax.
+* JSON requires double quotes to be used around strings and property names. Single quotes are not valid.
+* Even a single misplaced comma or colon can cause a JSON file to go wrong, and not work.
+* No comments allowed for standard (strict) JSON
+* `JSON.stringify()` and `JSON.parse()`
+* `package.json` and user favorite
+
+Note: [JSON.org](https://www.json.org/ "")
+
+<!-- vertical -->
+
+### JavaScript Object Syntax
 
 ```javascript
 let home = "home address";
@@ -212,85 +288,7 @@ console.log(target2);
 // TODO shallow copy??
 ```
 
-
-
 <!-- vertical -->
-
-### `var`, `let` and `const`
-
-![A chart comparing the similarities and differences between const let and var](public/const-vs-let-vs-var.png )
-
-<!-- vertical -->
-
-```javascript
-var a = 'a';
-let b = 'b';
-const c = {'c':'c'};
-
-// global scope
-window.a // "a"
-window.b // undefined
-window.c // undefined
-
-// can be reassigned
-a = 'a1'; // "a1"
-b = 'b1'; // "b1"
-c = 'c1'; // Uncaught TypeError: Assignment to constant variable.
-c.c = 'd'; // {c: "d"}
-
-// function scope
-let fun = function () {
-	var i = 1;
-	let j = 2;
-	const k = 3;
-	console.log(i);
-	console.log(j);
-	console.log(k);
-}
-fun(); // 1 2 3
-console.log(i); // Uncaught ReferenceError: i is not defined
-console.log(j); // Uncaught ReferenceError: j is not defined
-console.log(k); // Uncaught ReferenceError: k is not defined
-
-
-// block scope 1
-{
-	var x = 4;
-	let y = 5;
-	const z = 6;
-}
-console.log(x); // 4
-console.log(y); // Uncaught ReferenceError: y is not defined
-console.log(z); // Uncaught ReferenceError: z is not defined
-
-// block scope 2
-for (var v = 1; v < 3; v++) {
-	;
-}
-console.log(v); // 3
-for (let l = 1; l < 3; l++) {
-	;
-}
-console.log(l); // Uncaught ReferenceError: l is not defined
-```
-
-<!-- vertical -->
-
-Always define variable as `const`, use `let` unless you know its reference will be changed.
-
-[javascript - What's the difference between using "let" and "var"? - Stack Overflow](https://stackoverflow.com/questions/762011/whats-the-difference-between-using-let-and-var "")
-
-<!-- vertical -->
-
-
-
-### IIFE
-
-[javascript - What does the exclamation mark do before the function? - Stack Overflow](https://stackoverflow.com/questions/3755606/what-does-the-exclamation-mark-do-before-the-function "")
-
-
-
----
 
 
 
@@ -323,6 +321,7 @@ append(2); //[2], not [1, 2]
 ```
 
 Note:
+
 [Default parameters - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters "")
 
 <!-- vertical -->
@@ -336,13 +335,6 @@ baz // {foo: "bar"}
 ```
 
 <!-- vertical -->
-
-
-
-module
-
-* `require` and `import`
-
 
 
 ### `class`
@@ -456,6 +448,7 @@ Functions as first-class entities can:
 - return it as result from other functions
 
 Note:
+
 [Functional Programming Principles in Javascript](https://www.freecodecamp.org/news/functional-programming-principles-in-javascript-1b8fc6c3563f/ "")
 
 <!-- vertical -->
@@ -505,7 +498,7 @@ add1ThenDouble(2); // 6
 
 
 
-<!-- horizontal -->
+<!-- vertical -->
 
 
 ### Module
