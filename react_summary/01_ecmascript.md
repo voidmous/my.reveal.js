@@ -1,16 +1,19 @@
-## ECMA
+# ECMAScript
 
 European Computer Manufacturers Association
 
 <!-- vertical -->
 
-### ECMAScript & JavaScript
+## ECMAScript & JavaScript
 
 > **ECMAScript** (or **ES**) is a scripting-language specification standardized by [Ecma International](https://en.wikipedia.org/wiki/Ecma_International) in **ECMA-262** and ISO/IEC 16262. It was created to standardize [JavaScript](https://en.wikipedia.org/wiki/JavaScript), so as to foster multiple independent implementations. JavaScript has remained the best-known implementation of ECMAScript since the standard was first published, with other well-known implementations including [JScript](https://en.wikipedia.org/wiki/JScript) and [ActionScript](https://en.wikipedia.org/wiki/ActionScript).
 
 Note: [ECMAScript - Wikipedia](https://en.wikipedia.org/wiki/ECMAScript "")
 
 <!-- vertical -->
+ES5 -> ECMAScript 2009
+
+ES6 -> ECMAScript 2015
 
 ![:history-javascript-evolution-es6](https://adrianmejia.com/images/history-javascript-evolution-es6.png)
 
@@ -23,7 +26,7 @@ Note: [ECMAScript - Wikipedia](https://en.wikipedia.org/wiki/ECMAScript "")
 Note: [tc39/proposals: Tracking ECMAScript Proposals](https://github.com/tc39/proposals "")
 
 
-<!-- horizontal -->
+<!-- vertical -->
 
 ## ECMAScript Syntax
 
@@ -89,7 +92,7 @@ console.log(x); // 4
 console.log(y); // Uncaught ReferenceError: y is not defined
 console.log(z); // Uncaught ReferenceError: z is not defined
 
-// block scope 2
+// block scope 2  for-loop has two block scopes
 for (var v = 1; v < 3; v++) {
 	var v_ = v;
 }
@@ -107,11 +110,11 @@ console.log(t_); // Uncaught ReferenceError: t_ is not defined
 
 <!-- vertical -->
 
-### `==` and `===`
+### Equal and Strict Equal
 
 * `===` and `!==` are strict equal/unequal for primitive types
 * `==` and `!=` will do implicit type conversion before comparison
-* you should use `===` in most cases
+* you should use `===` in almost ALL cases
 
 ```js
 0 ==  false        // true
@@ -238,6 +241,60 @@ JSON.stringify(person);
 
 <!-- vertical -->
 
+### Destructuring Assignment
+
+Syntax of extracting values from an array or object and assign to variables
+
+```js
+let [a, b, c] = [1, 2, 3];
+let [x, y = 'b'] =  ['a'];
+
+let {foo: f, bar: b} = { foo: 'aaa', bar: 'bbb'};
+f // "aaa"
+b // "bbb"
+
+function example() {
+	return {
+		foo: 1,
+		bar: 2
+	};
+}
+let {foo, bar} = example();
+```
+
+Note:
+
+[Destructuring assignment - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment "")
+
+<!-- vertical -->
+
+### Rest/Spread `...`
+
+```js
+// Rest properties collect the remaining own enumerable property keys 
+// that are not already picked off by the destructuring pattern. Those 
+// keys and their values are copied onto a new object.
+let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
+x; // 1
+y; // 2
+z; // { a: 3, b: 4 }
+
+// Spread properties in object initializers copies own enumerable 
+// properties from a provided object onto the newly created object.
+let n = { x, y, ...z };
+n; // { x: 1, y: 2, a: 3, b: 4 }
+```
+
+Note: 
+
+[Spread syntax - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax "")
+
+[Rest parameters - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters "")
+
+[tc39/proposal-object-rest-spread: Rest/Spread Properties for ECMAScript](https://github.com/tc39/proposal-object-rest-spread "")
+
+<!-- vertical -->
+
 Array is special object with numerical keys
 
 ```js
@@ -298,20 +355,105 @@ console.log(target2);
 
 
 
-### Function extension
+### Function Extension
+
+<!-- vertical -->
+
 
 #### Arrow Function
 
-automatic this binding
+* Make function declaration simpler
+* Automatically bind right `this`
+	- Arrow functions cannot be used as constructors and will throw an error when used with new.
+
+Note: [Arrow functions - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions "")
+
+<!-- vertical -->
+
+```js
+const headAndTail = (head, ...tail) => [head, tail];
+headAndTail(1, 2, 3, 4, 5);
+// [1,[2,3,4,5]]
+
+// ES6
+const full = ({ first, last }) => first + " " + last; // note the {}
+
+// ES5 equivalence
+function full(person) {
+	return person.first + " " + person.last;
+}
+```
+
+<!-- vertical -->
+
+```js
+// TODO
+```
+
+<!-- vertical -->
 
 
+```js
+// ES6
+function foo() {
+	setTimeout( () => {
+		// Automatically bind this to window
+		console.log('id:', this.id);
+		// console.log('this', this);
+	}, 1000);
+}
+
+// ES5 equivalence
+function foo() {
+	var _this = this; // this is window
+
+	setTimeout( function() {
+		console.log('id:', _this.id);
+		// console.log('this', this);
+	}, 1000);
+}
+```
+
+<!-- vertical -->
+
+```js
+// use output of prvious function as input of next function
+const pipeline = (...funcs) => value => funcs.reduce( (a, b) => b(a), value);
+
+const plus1 = a => a + 1;
+const mult2 = a => a * 2;
+const square = a => a ** 2;
+
+pipeline(plus1, mult2, square)(5); // 144
+square(mult2(plus1(5))); // 144, equivalence
+pipeline(square, plus1, mult2)(2); // 10
+```
+
+<!-- vertical -->
+
+Currying
+
+```js
+// Currying function
+const add = function (x) {
+  return function (y) {
+    return x + y
+  }
+}
+
+const add = (x, y) => x + y;
+add(2, 3); //=> 5
+
+const add = x => y => x + y; // curried form
+add(2, 3);
+```
 
 <!-- vertical -->
 
 #### Default parameter
 
 ```js
-// Evaluated at call timeSection
+// Evaluated at call time
 function append(value, array = []) {
   array.push(value);
   return array;
@@ -326,19 +468,122 @@ Note:
 
 <!-- vertical -->
 
-### Object extension
+### Promise
+
+* Make callback hell to chaining syntax
+* A promise has 3 states:
+	- Pending
+	- Fulfilled
+	- Rejected
+
+Note:
+[Using promises - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises "")
+[Promise - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise "")
+
+<!-- vertical -->
+
+Both `Promise.prototype.then()` and `Promise.prototype.catch()` return a new Promise object
 
 ```js
-var foo = 'bar';
-var baz = {foo};
-baz // {foo: "bar"}
+p.then(onFulfilled[, onRejected]);
+p.then((value) => {
+  // fulfillment
+}, (reason) => {
+  // rejection
+});
+
+// equivalent to Promise.prototype.then(null, onRejected)
+p.catch(onRejected);
+p.catch(function(reason) {
+   // rejection
+});
 ```
 
 <!-- vertical -->
 
+![Promise Construction](https://en.proft.me/media/js/js_promises.png )
+
+Note:
+[An Introduction to Promises in JS | en.proft.me ](https://en.proft.me/2018/07/24/introduction-promises-js/ "")
+
+<!-- vertical -->
+
+![](https://i.stack.imgur.com/UZTsC.png )
+
+<!-- vertical -->
+
+```js
+let promise = new Promise(function(resolve, reject) {
+	console.log("Promise"); // log when define promise
+	resolve();
+});
+
+promise.then(function() {
+	console.log('Resolved');
+	// log when async operation finish or by then end of current event loop
+});
+
+console.log('Hi'); // log after promise definition
+/*
+Promise
+Hi
+Resolved
+*/
+```
+
+<!-- vertical -->
+
+![](https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/10/1445201770asynchronous-javascript02-es6-creating-promise-object.png )
+
+
+
+
+<!-- vertical -->
+
+Chaining Promise
+
+
+<!-- vertical -->
+
+If no error handling callback assigned, errow won't be throw to outer environment!
+
+```js
+// run this in .js file
+let doAsyncTask = function() {
+	return new Promise(function(resolve, reject) {
+		// x is not defined, expected to  raise error at run time
+		resolve(x + 2);
+	});
+};
+
+doAsyncTask().then( () => {
+	console.log('everything is great');
+});
+```
+
+
+<!-- vertical -->
 
 ### `class`
 
+* bind this for function in constructor or use arrow function
+
+```js
+class Logger {
+	printName(name = 'there') {
+		this.print(`Hello ${name}`);
+	}
+
+	print(text) {
+		console.log(text);
+	}
+}
+const logger = new Logger();
+logger.printName(); // Hello there
+
+const { printName } = logger;
+printName(); // Uncaught TypeError: Cannot read property 'print' of undefined
+```
 
 
 <!-- vertical -->
@@ -346,45 +591,23 @@ baz // {foo: "bar"}
 
 ### decorator
 
-
-
-<!-- vertical -->
-
-
-
-### **Destructuring Assignment**
-
-[Destructuring assignment - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment "")
-
-
-
-<!-- vertical -->
-
-
-### Rest/Spread `...`
+* Looks like Java annotation, but essentially they're totally different
 
 ```js
-// Rest properties collect the remaining own enumerable property keys 
-// that are not already picked off by the destructuring pattern. Those 
-// keys and their values are copied onto a new object.
-let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
-x; // 1
-y; // 2
-z; // { a: 3, b: 4 }
+// TODO not working
+function dec(id) {
+	console.log('evaluated', id);
+	return (target, property, descriptor) => {
+		console.log('executed', id);
+	}
+}
 
-// Spread properties in object initializers copies own enumerable 
-// properties from a provided object onto the newly created object.
-let n = { x, y, ...z };
-n; // { x: 1, y: 2, a: 3, b: 4 }
+class Example {
+	@dec(1)
+	@dec(2)
+	method () { console.log('method'); }
+}
 ```
-<!-- vertical -->
-
-[Spread syntax - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax "")
-
-[Rest parameters - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters "")
-
-[tc39/proposal-object-rest-spread: Rest/Spread Properties for ECMAScript](https://github.com/tc39/proposal-object-rest-spread "")
-
 
 <!-- vertical -->
 
