@@ -566,6 +566,36 @@ doAsyncTask().then( () => {
 
 ### `class`
 
+```js
+class Animal {
+	constructor(name) {
+		this.name = name;
+	}
+
+	sayMyName() {
+		console.log('My name is ' + this.name);
+	}
+}
+
+class Programmer extends Animal {
+	constructor(name) {
+		super(name); // must have super(): missing super() call in constructor
+	}
+
+	program() {
+		console.log("I'm coding...");
+	}
+}
+
+let animal = new Animal('kitty');
+let programmer = new Programmer('react');
+animal.sayMyName();     // My name is kitty
+programmer.sayMyName(); // My name is react
+programmer.program();   // I'm coding...
+```
+
+<!-- vertical -->
+
 * bind this for function in constructor or use arrow function
 
 ```js
@@ -591,7 +621,20 @@ printName(); // Uncaught TypeError: Cannot read property 'print' of undefined
 
 ### decorator
 
+* Can decorate class, class attribute, but not function
 * Looks like Java annotation, but essentially they're totally different
+
+```js
+@decorator
+class A {}
+
+// equivalent to
+
+class A {}
+A = decorator(A) || A;
+```
+
+<!-- vertical -->
 
 ```js
 // TODO not working
@@ -727,42 +770,59 @@ add1ThenDouble(2); // 6
 ### Module
 
 * CommonJS
+	- load modules synchronously
+	- mainly used in server side (Node.js)
+* AMD
+	- load modules asynchronously
+	- used mostly in front-end
 * ES6 Module
-* Others ??
 
 <!-- vertical -->
 
 
 #### CommonJS
 
+Load at run time
+
+```js
+// CommonJS Module
+let { stat, exists, readFile } = require('fs');
+
+// equivalent to 
+let _fs = require('fs');
+let stat = _fs.stat;
+let exists = _fs.exists;
+let readFile = _fs.readFile;
+```
+
 <!-- vertical -->
 
 #### ES6 Module
 
-`export`
+Load at comile time
+
 ```javascript
 // circle.js
 const PI = 3.14;
-const function circle_area(r) {
+const circle_area = function (r) {
     return PI * r * r;
 }
-export {PI, circle_area}
 
-export default const function(r) { // only one default export
+export {PI, circle_area};
+export default function(r) { // only one default export
     return 2 * PI * r;
-}
+};
 ```
 
 <!-- vertical -->
 
-`import`
 ```javascript
+// circle_calc.js
+// default import not wrapped with {}
 import length, {PI, circle_area as area} from './circle';
-PI;
-circle_area(2);
-length(2);
 
-import React, {Component, PropTypes} from 'react';
+let r = 10;
+console.log(PI);         // 3.14
+console.log(area(r));    // 314
+console.log(length(r));  // 62.800000000000004
 ```
-
-<!-- vertical -->

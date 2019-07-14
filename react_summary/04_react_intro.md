@@ -2,6 +2,20 @@
 
 <!-- vertical -->
 
+## Top-Level API
+
+```js
+React.createElement(
+  type,
+  [props],
+  [...children]
+)
+```
+
+Note: [React Top-Level API – React](https://reactjs.org/docs/react-api.html "")
+
+<!-- vertical -->
+
 ## JSX
 
 * HTML tag must be lower-case
@@ -16,13 +30,13 @@
 
 ### `props`
 
-**Declaration**:
+Declaration:
 
 ```jsx
 <User name="yan" age="18" />
 ```
 
-**Read**
+Read:
 
 ```jsx
 class User extends Component {
@@ -32,9 +46,7 @@ class User extends Component {
 }
 ```
 
-**Write**
-
-not modifiable
+Write: not modifiable
 
 <!-- vertical -->
 
@@ -120,7 +132,7 @@ Props type check only works in development mode, ignored in production
 
 ### `state`
 
-**Declaration**
+Declaration:
 
 ```jsx
 class Clock extends React.Component {
@@ -145,11 +157,9 @@ class Clock extends React.Component {
 
 <!-- vertical -->
 
-**Read**
+Read: `this.state.time`
 
- `this.state.time`
-
-**Write**
+Write:
 
 1. ~~`this.state.variable = newVar`~~
   * only sets value and can't trigger re-render, do not use
@@ -172,44 +182,47 @@ class Clock extends React.Component {
 
 <!-- vertical -->
 
-### Context
+## Context
 
-From grandparent component to grandchildren component
+From ancestor component to grandchildren component
 
 Not used very often
+
+<!-- vertical -->
 
 ```js
 import PropTypes from 'prop-types';
 
-      class Child extends React.Component {
+class Child extends React.Component {
 
-        static contextTypes = {
-          text: PropTypes.string
-        }
+    static contextTypes = {
+        text: PropTypes.string
+    }
 
-        render () {
-          return <div> {this.context.text} </div>;
-        }
-      }
+    render() {
+        return <div> {this.context.text} </div>;
+    }
+}
 
-      class Ancestor extends React.Component {
-        static childContextTypes = {
-          text: PropTypes.string
-        }
+class Ancestor extends React.Component {
 
-        getChildContext() {
-          return {text: 'ancestor'};
-        }
-      }
+    static childContextTypes = {
+        text: PropTypes.string
+    }
+
+    getChildContext() {
+        return { text: 'ancestor' };
+    }
+}
 ```
 
 <!-- vertical -->
 
-### Action Callback
+## Action Callback
 
 
 
-### `ref`
+## `ref`
 
 ```js
 class UseRef extends React.Component {
@@ -257,9 +270,7 @@ class UseRef extends React.Component {
 }
 ```
 
-
-
-[Refs and the DOM – React](https://reactjs.org/docs/refs-and-the-dom.html "")
+Note: [Refs and the DOM – React](https://reactjs.org/docs/refs-and-the-dom.html "")
 
 <!-- vertical -->
 
@@ -320,6 +331,16 @@ Note:
 
 ## Life Cycle
 
+* `shouldComponentUpdate()` reduce unnecessary redraw to improve performance
+* `componentWillReceiveProps()` sync new `props` to `state`
+* `componentWillUnmount()` clean resources
+
+<!-- vertical -->
+
+<img src="public/react_life_cycle_process.jpg" alt="" style="background:none; border:none; box-shadow:none;" height="700px"/>
+
+<!-- vertical -->
+
 When will a compoent redraw?
 
 1. Parent `props` update
@@ -342,36 +363,30 @@ When will a compoent redraw?
 <!-- vertical -->
 
 
-`shouldComponentUpdate()` is mostly used to reduce unnecessary redraw to improve performance, `componentWillReceiveProps()` is generally used to sync new `props` to `state`
-
-`componentWillUnmount()` is used to clean resources 
-
-<!-- vertical -->
-
 ```js
 class WindowWidth extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { windowWidth: window.innerWidth };
-        // manually bind this
-        this.onWindowResize = this.onWindowResize.bind(this);
-    }
+	constructor(props) {
+		super(props);
+		this.state = { windowWidth: window.innerWidth };
+		// manually bind this
+		this.onWindowResize = this.onWindowResize.bind(this);
+	}
 
-    onWindowResize(event) {
-        this.setState({ windowWidth: window.innerWidth });
-    }
+	onWindowResize(event) {
+		this.setState({ windowWidth: window.innerWidth });
+	}
 
-    componentDidMount() {
-        window.addEventListener('resize', this.onWindowResize);
-    }
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.onWindowResize);
-        // should have exactly same params as addEventListener!
-    }
+	componentDidMount() {
+		window.addEventListener('resize', this.onWindowResize);
+	}
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.onWindowResize);
+		// should have exactly same params as addEventListener!
+	}
 
-    render() {
-        return (<div>Window width: {this.state.windowWidth} </div>);
-    }
+	render() {
+		return (<div>Window width: {this.state.windowWidth} </div>);
+	}
 }
 ```
 <!-- vertical -->
@@ -387,19 +402,6 @@ TODO: when will datagrid be unmounted ?
 <!-- vertical -->
 
 
-
-<img src="public/react_life_cycle_process.jpg" alt="" style="background:none; border:none; box-shadow:none;" height="700px"/>
-
-
-
-<!-- vertical -->
-
-
-
-![React Life Cycle Process Image](public/react_life_cycle_process.jpg )
-
-<!-- vertical -->
-
 ![React setState() correct usage](public/react_setstate_usage.png )
 
 <!-- vertical -->
@@ -411,7 +413,13 @@ Note: [ReactJs component lifecycle methods — A deep dive – Hacker Noon](http
 <!-- vertical -->
 
 
-## Data Flow
+## State Management
+
+### Flux versus Redux
+
+
+
+<!-- vertical -->
 
 [What Does Redux Do? (and when should you use it?)](https://daveceddia.com/what-does-redux-do/ "") ✔✔✔✔
 
@@ -423,27 +431,25 @@ Note: [ReactJs component lifecycle methods — A deep dive – Hacker Noon](http
 
 <!-- vertical -->
 
-![:scale 100%, Flux Pattern](public/flux_pattern.jpg)
+<img src="public/flux_pattern.jpg" alt="Flux Pattern" style="background:none; border:none; box-shadow:none;" height="700px"/>
 
 <!-- vertical -->
 
-![:scale 100%, Redux Pattern](public/redux_pattern.jpg) <!-- height="700px" -->
+<img src="public/redux_pattern.jpg" alt="Redux Pattern" style="background:none; border:none; box-shadow:none;" height="700px"/>
 
 <!-- vertical -->
 
 ![:scale 100%, Flux Versus Redux](public/flux_vs_redux.jpg)
 
-<!-- vertical -->
-
+Note:
 ![:scale 100%, Flux Versus Redux](public/flux_vs_redux_2.png)
 
+<!-- vertical -->
 
 
 这一部分可以参考 [自述 · GitBook](http://cn.redux.js.org/index.html "")
 
 ```js
-
-
 import { createStore } from 'redux'
 
 /**
@@ -458,14 +464,14 @@ import { createStore } from 'redux'
  * 根据不同的约定（如方法映射）来判断，只要适用你的项目即可。
  */
 function counter(state = 0, action) {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1
-    case 'DECREMENT':
-      return state - 1
-    default:
-      return state
-  }
+	switch (action.type) {
+		case 'INCREMENT':
+			return state + 1
+		case 'DECREMENT':
+			return state - 1
+		default:
+			return state
+	}
 }
 
 // 创建 Redux store 来存放应用的状态。
@@ -628,7 +634,3 @@ $(rootELe).on('hidden.bs.modal', this.handleHidden);
 ```
 
 [javascript - How to use JQuery with ReactJS - Stack Overflow](https://stackoverflow.com/questions/38518278/how-to-use-jquery-with-reactjs "")
-
-
-
-<!-- vertical -->

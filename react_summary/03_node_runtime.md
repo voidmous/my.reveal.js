@@ -6,6 +6,8 @@
 
 ## Package Manager
 
+### npm
+
 * [npm | build amazing things](https://www.npmjs.com/ "")
   - Install with correct access level
 * [Yarn](https://yarnpkg.com/zh-Hant/ "")
@@ -33,22 +35,21 @@ digraph {
 
 <!-- vertical -->
 
-
 ### package.json
-
-A package should have `package.json` file
 
 * **name**: mandatory
 * **version**: `MajorVersion.MinorVersion.Patch`
 * **main**: mandatory, relative path to package directory
-* **engines**: Node version requirement
 * **scripts**: customize command, `npm run <script>`
-* **dependencies**: necessary for running code, `npm install --save <pkg>`
-* **devDependencies**: necessary for running DEV tools (babel transpile, webpack toolchain, lint, test), `npm install --save-dev <pkg>`
+* **dependencies**: necessary for running code
+  - `npm install --save <pkg>`
+* **devDependencies**: necessary for running DEV tools (babel transpile, webpack toolchain, lint, test)
+  - `npm install --save-dev <pkg>`
+* **engines**: Node version requirement
 
 <!-- vertical -->
 
-Difference between run in command line and run script in `package.json`?
+TODO: Difference between run in command line and run script in `package.json`?
 
 <!-- vertical -->
 
@@ -64,7 +65,7 @@ scripts `pre-` and `post-` hook
 
 <!-- vertical -->
 
-## npx (Node Package Executor ??)
+### npx (Node Package Executor ??)
 
 [npx  -  npm](https://www.npmjs.com/package/npx "")
 
@@ -76,19 +77,22 @@ scripts `pre-` and `post-` hook
 
 ## [Babel](https://babeljs.io/ "")
 
-**A transpiler that can convert ES6 code to ES5 code.**
+A transpiler that converts ES6 code to ES5 code.
 
-[Babel · Online REPL](https://babeljs.io/repl "")
-
-[Plugins · Babel](https://babeljs.io/docs/en/plugins/ "")
-
-[babel-preset - npm search](https://www.npmjs.com/search?q=babel-preset "")
 
 ```shell
 $ npm install --save-dev babel-preset-react
 $ npm install --save-dev babel-preset-es2015
 $ npm install --save-dev babel-preset-stage-0
 ```
+
+Note:
+
+[Babel · Online REPL](https://babeljs.io/repl "")
+
+[Plugins · Babel](https://babeljs.io/docs/en/plugins/ "")
+
+[babel-preset - npm search](https://www.npmjs.com/search?q=babel-preset "")
 
 <!-- vertical -->
 
@@ -103,22 +107,25 @@ $ npm install --save-dev babel-preset-stage-0
   "plugins": []
 }
 ```
+<!-- vertical -->
+
+`babel-cli` package provides:
+1.  `babel` command to transpile js file
+2. `babel-node` to run js file directly
 
 ```shell
-npm install --global babel-cli
-babel example.js --out-file compiled.js
-npm install --global babel-cli
-babel-node // ES6 REPL
+$ npm install --global babel-cli
+
+$ babel example.js --out-file compiled.js
+$ node compiled.js
+
+$ babel-node --presets babel-preset-es2015 example.js
 ```
 <!-- vertical -->
 
 ### babel-polyfill
 
 > A polyfill is a piece of code (usually JavaScript on the Web) used to provide modern functionality on older browsers that do not natively support it.
-
-Note: [Polyfill - MDN Web Docs Glossary: Definitions of Web-related terms | MDN](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill "")
-
-<!-- vertical -->
 
 Support new API:
 
@@ -132,28 +139,32 @@ import 'babel-polyfill'
 require('babel-polyfill')
 ```
 
-<!-- horizontal -->
+Note: [Polyfill - MDN Web Docs Glossary: Definitions of Web-related terms | MDN](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill "")
+
+<!-- vertical -->
 
 ## Webpack
+
+![webpack png](public/webpack.png)
 
 <!-- vertical -->
 
 ### Concepts
 
-#### Entry
+1. Entry
 
 ```js
 module.exports = {
   entry: {
-    app: './src/app.js',
-    adminApp: './src/adminApp.js'
+    app: './src/app.js',   // entry 1
+    adminApp: './src/adminApp.js'  // entry 2
   }
 };
 ```
 
 <!-- vertical -->
 
-#### Output
+2. Output
 
 there can be multiple `entry` points, only one `output` configuration is specified.
 
@@ -164,8 +175,9 @@ module.exports = {
     search: './src/search.js'
   },
   output: {
-    filename: '[name].js',
-    path: __dirname + '/dist'
+    filename: '[name].js',     // output file name
+    publicPath: '/dist/',      // web access path
+    path: __dirname + '/dist'  // absolute path of bundled output file
   }
 };
 ```
@@ -180,21 +192,30 @@ module.exports = {
 };
 ```
 
+<!-- vertical -->
 
-#### Plugin
+3. Plugin
 
 <!-- vertical -->
 
-#### Module
+4. Module
+
+
 
 <!-- vertical -->
 
-#### CSS processing
+### CSS processing
 
-* sass-loader
-* postcss-loader
-* css-loader
-* style-loader
+1. sass-loader
+2. postcss-loader
+3. css-loader
+4. style-loader
+
+TODO add webpack css loader configuration
+
+<!-- vertical -->
+
+### Common plugins
 
 TODO ExtractTextPlugin("bundle.css")
 
@@ -206,17 +227,23 @@ HtmlWebpackPlugin
 
 <!-- vertical -->
 
-### Hot Module Replacement
-
-[Hot Module Replacement](https://webpack.js.org/concepts/hot-module-replacement "")
+### [Hot Module Replacement](https://webpack.js.org/concepts/hot-module-replacement "")
 
 > Hot Module Replacement (HMR) exchanges, adds, or removes modules while an application is running, without a full reload.
 
+![](https://uploads.toptal.io/blog/image/126624/toptal-blog-image-1531492763968-39dfd789f841e20fa94d1e387789c9bc.png )
 
+![Webpack HMR Mechanics](https://www.javascriptstuff.com/static/webpack-overview-diagram-de23dc03e5ee143a3d1f1ec7e4c72eff-18766.png )
+
+Note:
+
+[A Minimal Example of HMR in a Redux Application | Toptal](https://www.toptal.com/javascript/hot-module-replacement-in-redux "")
+
+[Understanding Webpack HMR](https://www.javascriptstuff.com/understanding-hmr/ "")
 
 [webpack与browser-sync热更新原理深度讲解 | louis blog](https://louiszhai.github.io/2017/04/19/hmr/ "")
 
-
+<!-- vertical -->
 
 ## ESLint
 

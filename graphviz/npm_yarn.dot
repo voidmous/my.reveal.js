@@ -1,5 +1,7 @@
 digraph {
+    npmrc [shape=rect label=<~/.npmrc>]
     start [shape=circle label=< > width=0.5 style=filled]
+    yarnrc [shape=rect label=<~/.yarnrc>]
     pkgjson [label=<package.json> shape=box]
     pkglock [label=<package-lock.json<br/>package.json> shape=box]
     pkgshrink [label=<npm-shrinkwrap.json<br/>package.json> shape=box]
