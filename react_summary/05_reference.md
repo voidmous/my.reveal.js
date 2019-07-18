@@ -2,7 +2,7 @@
 
 <!-- vertical -->
 
-## Browser Extension
+## Development Tools
 
 * **React Developer Tools**: [facebook/react-devtools: ](https://github.com/facebook/react-devtools "")
     - An extension that allows inspection of React component hierarchy in the Chrome and Firefox Developer Tools.

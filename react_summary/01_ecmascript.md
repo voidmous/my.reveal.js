@@ -13,7 +13,7 @@ Note: [ECMAScript - Wikipedia](https://en.wikipedia.org/wiki/ECMAScript "")
 <!-- vertical -->
 ES5 -> ECMAScript 2009
 
-ES6 -> ECMAScript 2015
+ES6 -> ECMAScript 2015 (and after)
 
 ![:history-javascript-evolution-es6](https://adrianmejia.com/images/history-javascript-evolution-es6.png)
 
@@ -213,7 +213,7 @@ A simple `package.json`
 * JSON requires double quotes to be used around strings and property names. Single quotes are not valid.
 * Even a single misplaced comma or colon can cause a JSON file to go wrong, and not work.
 * No comments allowed for standard (strict) JSON
-* `JSON.stringify()` and `JSON.parse()`
+* Deep copy object: `JSON.parse(JSON.stringify(obj))`
 * `package.json` and user favorite
 
 Note: [JSON.org](https://www.json.org/ "")
@@ -230,13 +230,13 @@ let person = {
 	"first name"  :   "fname",
 	'middle name' :   "mname",
 	last_name     :   "lname",
-	[home]        :   "hangzhou",
+	home          :   "hangzhou",
+	[home]        :   "sandun",
 	phone
 };
 JSON.stringify(person);
-/* {"first name":"fname","middle name":"mname",
-"last_name":"lname","home address":"hangzhou",
-"phone":"123456"} */
+/* {"first name":"fname","middle name":"mname","last_name":"lname",
+"home":"hangzhou","home address":"sandun","phone":"123456"} */
 ```
 
 <!-- vertical -->

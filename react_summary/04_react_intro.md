@@ -63,7 +63,9 @@ function User(props) {
 }
 ```
 
-It's recommended to use `()` after `return` to avoid subtle syntax error
+It's recommended to use `()` after `return` to avoid Automatic Semicolon Insertion
+
+Note: [Understanding Automatic Semicolon Insertion in JavaScript](http://www.bradoncode.com/blog/2015/08/26/javascript-semi-colon-insertion/ "")
 
 <!-- vertical -->
 
@@ -143,10 +145,12 @@ class Clock extends React.Component {
 	componentDidMount() {
 		this.id = setInterval(() => {
 			this.setState({ time: this.state.time + 1 }, () => {
-				console.log('callback ' + this.state.time); // return 1 after setState
+				console.log('callback ' + this.state.time); 
+				// return 1 after setState
 			})
 		}, 1000); // will run asynchronously
-		console.log('subsequence ' + this.state.time); // return 0 instead of 1
+		console.log('subsequence ' + this.state.time); 
+		// return 0 instead of 1
 	}
 
 	render() {
@@ -543,15 +547,16 @@ Store Enhancer
 
 ## fetch and thunk
 
-![:scale 100%](public/redux_thunk_1.gif)
+<!-- vertical -->
+
+<img src="public/redux_thunk_1.gif" alt="Redux Thunk 1" style="background:none; border:none; box-shadow:none;" height="700px"/>
+
+<!-- vertical -->
+<img src="public/redux_thunk_2.png" alt="Redux Thunk 2" style="background:none; border:none; box-shadow:none;" height="700px"/>
 
 <!-- vertical -->
 
-![:scale 100%](public/redux_thunk_2.png)
-
-<!-- vertical -->
-
-![:scale 100%](public/redux_data_flow.png)
+<img src="public/redux_data_flow.png" alt="Redux Data Flow" style="background:none; border:none; box-shadow:none;" height="700px"/>
 
 <!-- vertical -->
 

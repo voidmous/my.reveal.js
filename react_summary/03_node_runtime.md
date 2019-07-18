@@ -231,9 +231,14 @@ HtmlWebpackPlugin
 
 > Hot Module Replacement (HMR) exchanges, adds, or removes modules while an application is running, without a full reload.
 
+<!-- vertical -->
+
 ![](https://uploads.toptal.io/blog/image/126624/toptal-blog-image-1531492763968-39dfd789f841e20fa94d1e387789c9bc.png )
 
+<!-- vertical -->
+
 ![Webpack HMR Mechanics](https://www.javascriptstuff.com/static/webpack-overview-diagram-de23dc03e5ee143a3d1f1ec7e4c72eff-18766.png )
+
 
 Note:
 
