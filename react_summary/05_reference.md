@@ -4,16 +4,24 @@
 
 ## Development Tools
 
-* **React Developer Tools**: [facebook/react-devtools: ](https://github.com/facebook/react-devtools "")
-    - React Developer Tools lets you inspect the React component hierarchy, including component props and state.
-    - Browser extension or standalone app
-    - [React Devtools: A Brief Introduction ← Alligator.io](https://alligator.io/react/react-devtools-intro/ "")
-* **Redux DevTools**: [zalmoxisus/redux-devtools-extension](https://github.com/zalmoxisus/redux-devtools-extension "")
-    - [gaearon/redux-devtools-log-monitor: The default monitor for Redux DevTools with a tree view](https://github.com/gaearon/redux-devtools-log-monitor ""), logging react component in app
-    - TODO how to use redux dev tool
+<!-- vertical -->
+
+**React Developer Tools**: [facebook/react-devtools: ](https://github.com/facebook/react-devtools "")
+  - React Developer Tools lets you inspect the React component hierarchy, including component props and state.
+  - Browser extension or standalone app
+  - [React Devtools: A Brief Introduction ← Alligator.io](https://alligator.io/react/react-devtools-intro/ "")
+
+<!-- vertical -->
+
+**Redux DevTools**: [zalmoxisus/redux-devtools-extension](https://github.com/zalmoxisus/redux-devtools-extension "")
+  - [gaearon/redux-devtools-log-monitor: The default monitor for Redux DevTools with a tree view](https://github.com/gaearon/redux-devtools-log-monitor ""), logging react component in app
+  - TODO how to use redux dev tool
+
+<!-- vertical -->
+
 * **React Performance Devtool**: [nitin42/react-perf-devtool](https://github.com/nitin42/react-perf-devtool "")
-    - A browser developer tool extension to inspect performance of React components.
-    - [Optimizing Performance – React](https://reactjs.org/docs/optimizing-performance.html "")
+  - A browser developer tool extension to inspect performance of React components.
+  - [Optimizing Performance – React](https://reactjs.org/docs/optimizing-performance.html "")
 
 <!-- vertical -->
 

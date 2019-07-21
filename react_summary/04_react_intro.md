@@ -512,7 +512,7 @@ TODO: when will datagrid be unmounted ?
 <!-- vertical -->
 
 
-## Redux: State Management
+## Redux: one-way data flow
 
 ![:scale 100%, ](public/why_use_store.png)
 
@@ -538,11 +538,11 @@ Note:
 
 ### Redux VS Flux
 
-* Created by Dan Dan Abramov
+* Created by Dan Abramov
 * `Redux = reducer + Flux`
 * More strict to control data flow than Flux
-  - Single Source of Truth
-  - Dispatcher simplified to `store.dispatch()`
+  - Single source of truth
+  - Dispatcher got simplified to `store.dispatch()`
   - State is read-only (no direct write)
   - Changes are made with pure functions (`reducer`)
 
@@ -566,9 +566,82 @@ Note:
 
 <!-- vertical -->
 
-TODO: [Understanding Redux: The World’s Easiest Guide to Beginning Redux](https://www.freecodecamp.org/news/understanding-redux-the-worlds-easiest-guide-to-beginning-redux-c695f45546f6/ "")
+* `redux` gives you a store, and lets you keep state in it, and get state out, and respond when the state changes
+* `react-redux` lets you connect pieces of the state to React components
 
-这一部分可以参考 [自述 · GitBook](http://cn.redux.js.org/index.html "")
+<!-- vertical -->
+
+```js
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+
+const initialState = {
+  count: 10
+};
+
+function reducer(state = initialState, action) {
+  switch(action.type) {
+    case 'INCREMENT':
+      return {
+        count: state.count + 1
+      };
+    case 'DECREMENT':
+      return {
+        count: state.count - 1
+      };
+    default:
+      return state;
+  }
+}
+
+const store = createStore(reducer);
+
+render(
+  <Provider store={store}>
+    <Counter />
+  </Provider>
+)
+```
+
+<!-- vertical -->
+
+```js
+import { connect } from 'react-redux';
+
+function mapStateToProps(state) {
+  return {
+    count: state.count
+  };
+}
+
+class Counter extends React.Component {
+
+	increment = () => {
+		this.props.dispatch({ type: 'INCREMENT'});
+	}
+
+	decrement = () => {
+		this.props.dispatch({ type: 'DECREMENT'});
+	}
+
+	render() {
+		return (
+			<div>
+				<h3>Counter</h3>
+				<div>
+					<button onClick={this.decrement}> - </button>
+					<span>{this.props.count}</span>
+					<button onClick={this.increment}> + </button>
+				</div>
+			</div>
+		)
+	}
+}
+
+export default connect(mapStateToProps)(Counter);
+```
+
+<!-- vertical -->
 
 ```js
 import { createStore } from 'redux'
@@ -612,18 +685,11 @@ store.dispatch({ type: 'DECREMENT' })
 // 1
 ```
 
-<!-- vertical -->
+Note:
 
-## React-Redux
+TODO: [Understanding Redux: The World’s Easiest Guide to Beginning Redux](https://www.freecodecamp.org/news/understanding-redux-the-worlds-easiest-guide-to-beginning-redux-c695f45546f6/ "")
 
-```js
-import { Provider } from 'react-redux';
-
-export default connect( mapStateToProps, mapDispatchToProps)( Counter);
-```
-
-`mapStateToProps()`
-`mapDispatchToProps()`
+这一部分可以参考 [自述 · GitBook](http://cn.redux.js.org/index.html "")
 
 <!-- vertical -->
 
