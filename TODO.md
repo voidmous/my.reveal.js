@@ -11,5 +11,6 @@ Middleware
 
 [Getting Started with Redux · Redux](https://redux.js.org/introduction/getting-started "")
 
+[Understanding Redux: The World’s Easiest Guide to Beginning Redux](https://www.freecodecamp.org/news/understanding-redux-the-worlds-easiest-guide-to-beginning-redux-c695f45546f6/ "")
 
 [Learn the Basics of Redux for React - DZone Web Dev](https://dzone.com/articles/learn-the-basics-of-redux-for-react?utm_medium=feed&utm_source=feedpress.me&utm_campaign=Feed:%20dzone "")
