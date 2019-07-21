@@ -41,37 +41,14 @@ digraph {
 * **version**: `MajorVersion.MinorVersion.Patch`
 * **main**: mandatory, relative path to package directory
 * **scripts**: customize command, `npm run <script>`
-* **dependencies**: necessary for running code
+* **dependencies**: necessary for running production code
   - `npm install --save <pkg>`
 * **devDependencies**: necessary for running DEV tools (babel transpile, webpack toolchain, lint, test)
   - `npm install --save-dev <pkg>`
-* **engines**: Node version requirement
 
 <!-- vertical -->
 
 TODO: Difference between run in command line and run script in `package.json`?
-
-<!-- vertical -->
-
-scripts `pre-` and `post-` hook
-
-```js
-"scripts": {
-    "test": "mocha test/",
-    "pretest": "echo test start!",
-    "posttest": "echo test end!"
-}
-```
-
-<!-- vertical -->
-
-### npx (Node Package Executor ??)
-
-[npx  -  npm](https://www.npmjs.com/package/npx "")
-
-[Introducing npx: an npm package runner – Kat Marchán – Medium](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b "")
-
-[javascript - Difference between npx and npm? - Stack Overflow](https://stackoverflow.com/questions/50605219/difference-between-npx-and-npm "")
 
 <!-- vertical -->
 
@@ -247,9 +224,3 @@ Note:
 [Understanding Webpack HMR](https://www.javascriptstuff.com/understanding-hmr/ "")
 
 [webpack与browser-sync热更新原理深度讲解 | louis blog](https://louiszhai.github.io/2017/04/19/hmr/ "")
-
-<!-- vertical -->
-
-## ESLint
-
-`eslint --init`

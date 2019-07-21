@@ -5,12 +5,19 @@
 ## Development Tools
 
 * **React Developer Tools**: [facebook/react-devtools: ](https://github.com/facebook/react-devtools "")
-    - An extension that allows inspection of React component hierarchy in the Chrome and Firefox Developer Tools.
-    - Alternative method: bind store to window object
+    - React Developer Tools lets you inspect the React component hierarchy, including component props and state.
+    - Browser extension or standalone app
+    - [React Devtools: A Brief Introduction ← Alligator.io](https://alligator.io/react/react-devtools-intro/ "")
 * **Redux DevTools**: [zalmoxisus/redux-devtools-extension](https://github.com/zalmoxisus/redux-devtools-extension "")
+    - [gaearon/redux-devtools-log-monitor: The default monitor for Redux DevTools with a tree view](https://github.com/gaearon/redux-devtools-log-monitor ""), logging react component in app
+    - TODO how to use redux dev tool
 * **React Performance Devtool**: [nitin42/react-perf-devtool](https://github.com/nitin42/react-perf-devtool "")
     - A browser developer tool extension to inspect performance of React components.
+    - [Optimizing Performance – React](https://reactjs.org/docs/optimizing-performance.html "")
 
+<!-- vertical -->
+
+![Redux DevTools Log Monitor](https://camo.githubusercontent.com/a0d66cf145fe35cbe5fb341494b04f277d5d85dd/687474703a2f2f692e696d6775722e636f6d2f4a34476557304d2e676966 )
 <!-- vertical -->
 
 ## ECMAScript
@@ -30,11 +37,11 @@
 [Redux 中文文档 · GitBook](http://cn.redux.js.org/index.html "") ☆☆☆☆
 * [Action](http://cn.redux.js.org/docs/basics/Actions.html "")
 
-[深入浅出React和Redux (豆瓣)](https://book.douban.com/subject/27033213/ "") ☆☆☆
+[深入浅出React和Redux](https://book.douban.com/subject/27033213/ "") ☆☆☆
 
-[React状态管理与同构实战 (豆瓣)](https://book.douban.com/subject/30290509/ "") ☆☆☆
+[React状态管理与同构实战](https://book.douban.com/subject/30290509/ "") ☆☆☆
 
-[深入React技术栈-图书-图灵社区](http://www.ituring.com.cn/book/1898 "")
+[深入React技术栈](http://www.ituring.com.cn/book/1898 "")
 
 
 <!-- vertical -->
@@ -62,3 +69,6 @@ GWT in Action
 [React Redux Tutorial for Beginners: The Definitive Guide (2019)](https://www.valentinog.com/blog/redux/ "")
 
 [React Tutorial: Introduction | Build with React JS](http://buildwithreact.com/tutorial "")
+
+
+[Getting Started with React (2019 Edition) ― React Starter ― Scotch.io](https://scotch.io/starters/react/getting-started-with-react-2019-edition "")

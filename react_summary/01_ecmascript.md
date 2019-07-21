@@ -114,7 +114,7 @@ console.log(t_); // Uncaught ReferenceError: t_ is not defined
 
 * `===` and `!==` are strict equal/unequal for primitive types
 * `==` and `!=` will do implicit type conversion before comparison
-* you should use `===` in almost ALL cases
+* you should use `===` in almost **ALL** cases
 
 ```js
 0 ==  false        // true
@@ -153,36 +153,6 @@ c === d           // false
 "abc" == new String("abc")    // true
 "abc" === new String("abc")   // false
 ```
-
-<!-- vertical -->
-
-`!!function(){}`
-
-```js
- function foo() {console.log('a');} // undefined
-!function foo() {console.log('a');} 
-// false, ! turns function declartion to an function expression
-
- function foo() {console.log('a');}() // Uncaught SyntaxError: Unexpected token )
-!function foo() {console.log('a');}() 
-// a
-// true
-!!function foo() {console.log('a');}()
-// a
-//false
-(function foo() {console.log('a');})() // IIFE returns undefined by default
-// a
-// undefined
-```
-
-the double-bang `!!` returns the boolean true/false association of a value.
-
-Note:
-
-[javascript - What does the exclamation mark do before the function? - Stack Overflow](https://stackoverflow.com/questions/3755606/what-does-the-exclamation-mark-do-before-the-function "")
-[Javascript “Bang, Bang. I shot you down” - Use of double bangs (!!) in Javascript.](https://medium.com/swlh/javascript-bang-bang-i-shot-you-down-use-of-double-bangs-in-javascript-7c9d94446054 "")
-
-
 
 <!-- vertical -->
 
@@ -268,7 +238,7 @@ Note:
 
 <!-- vertical -->
 
-### Rest/Spread `...`
+### `...` Rest/Spread
 
 ```js
 // Rest properties collect the remaining own enumerable property keys 
@@ -281,8 +251,8 @@ z; // { a: 3, b: 4 }
 
 // Spread properties in object initializers copies own enumerable 
 // properties from a provided object onto the newly created object.
-let n = { x, y, ...z };
-n; // { x: 1, y: 2, a: 3, b: 4 }
+let n = { x, y, a: 99, ...z, b: 99 }; // sequence does matter !!
+n; // {x: 1, y: 2, a: 3, b: 99}
 ```
 
 Note: 
@@ -780,7 +750,7 @@ add1ThenDouble(2); // 6
 <!-- vertical -->
 
 
-#### CommonJS
+### CommonJS
 
 Load at run time
 
@@ -797,7 +767,7 @@ let readFile = _fs.readFile;
 
 <!-- vertical -->
 
-#### ES6 Module
+### ES6 Module
 
 Load at comile time
 
@@ -812,11 +782,7 @@ export {PI, circle_area};
 export default function(r) { // only one default export
     return 2 * PI * r;
 };
-```
 
-<!-- vertical -->
-
-```javascript
 // circle_calc.js
 // default import not wrapped with {}
 import length, {PI, circle_area as area} from './circle';
@@ -826,3 +792,30 @@ console.log(PI);         // 3.14
 console.log(area(r));    // 314
 console.log(length(r));  // 62.800000000000004
 ```
+<!-- vertical -->
+
+### Console logging output
+
+* Result depends on implementation of run time environment
+
+```js
+let obj = { name: 'a', id: 123 };
+
+console.log('init obj JSON: ' + JSON.stringify(obj, null, 2));
+// !!! obj re-evaluated when expanded in browser console
+console.log('init obj: ', obj);
+console.log('init obj clone: ', JSON.parse(JSON.stringify(obj))); 
+
+obj.id = 111;
+
+console.log('updated obj JSON: ' + JSON.stringify(obj, null, 2));
+console.log('updated obj: ', obj);
+console.log('updated obj clone: ', JSON.parse(JSON.stringify(obj)));
+```
+
+Note: [javascript - Weird behavior with objects &amp; console.log - Stack Overflow](https://stackoverflow.com/questions/23429203/weird-behavior-with-objects-console-log "")
+
+<!-- vertical -->
+
+TypeScript ??
+

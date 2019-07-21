@@ -141,7 +141,8 @@ body {
 
 .reveal blockquote p:first-child,
 .reveal blockquote p:last-child {
-  display: inline-block; }
+  display: inline-block;
+  font-size: 80% }
 
 .reveal q {
   font-style: italic; }
@@ -240,7 +241,7 @@ body {
 .reveal section img {
   margin: 15px 0px;
   background: rgba(255, 255, 255, 0.12);
-  border: 2px solid #333;
+  border: 1px solid #333;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
 
 .reveal section img.plain {

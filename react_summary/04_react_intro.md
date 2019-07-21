@@ -2,6 +2,30 @@
 
 <!-- vertical -->
 
+## React
+
+* Declarative programming, DOM operations are encapsulated
+* Component oriented, JavaScript (JSX) + CSS
+* Virtual DOM, render to Web or native app
+
+<!-- vertical -->
+
+## VirtualDOM
+
+![](public/react-virtual-dom.png )
+
+Note:
+
+TODO: add VDOM and Real DOM image
+
+[The Inner Workings Of Virtual DOM – rajaraodv – Medium](https://medium.com/@rajaraodv/the-inner-workings-of-virtual-dom-666ee7ad47cf "")
+[How Virtual-DOM and diffing works in React – Gethyl George Kurian – Medium](https://medium.com/@gethylgeorge/how-virtual-dom-and-diffing-works-in-react-6fc805f9f84e "")
+[Virtual DOM: How inefficiency can lead to better performance - AFAS Dev](https://dev.afas.nl/blog-dev/virtual-dom-how-inefficiency-can-lead-to-better-performance "")
+[Understanding the Virtual DOM](https://bitsofco.de/understanding-the-virtual-dom/ "")
+[The Real Benefits of the Virtual DOM in React.js](https://www.accelebrate.com/blog/the-real-benefits-of-the-virtual-dom-in-react-js/ "")
+
+<!-- vertical -->
+
 ## Top-Level API
 
 ```js
@@ -18,9 +42,41 @@ Note: [React Top-Level API – React](https://reactjs.org/docs/react-api.html ""
 
 ## JSX
 
-* HTML tag must be lower-case
-* User-Defined Components Must Be Capitalized
+> JSX, or JavaScript XML, is an extension to the JavaScript language syntax.
+
+* If first-letter of tag is capitalized then User defined components otherwise HTML tag
+* Attributes: `className` -> `class`; `onClick` -> `onclick`
 * Add `import React from 'react';` wherever you use JSX
+
+<!-- vertical -->
+
+```jsx
+import React from 'react';
+
+class ClickCounter extends Component {
+
+  constructor(props) {
+    super(props);
+    this.onClickButton = this.onClickButton.bind(this);
+    this.state = { count: 0 };
+  }
+
+  onClickButton() {
+    this.setState({count: this.state.count + 1});
+  }
+
+  render() {
+    return (
+      <div style={{margin: '16px'}}>
+        <button onClick={this.onClickButton}>Click Me</button>
+        <div>
+          Click Count: <span id="clickCount">{this.state.count}</span>
+        </div>
+      </div>
+    );
+  }
+}
+```
 
 <!-- vertical -->
 
@@ -33,7 +89,7 @@ Note: [React Top-Level API – React](https://reactjs.org/docs/react-api.html ""
 Declaration:
 
 ```jsx
-<User name="yan" age="18" />
+<User name="yan" age="30"></User>
 ```
 
 Read:
@@ -41,12 +97,13 @@ Read:
 ```jsx
 class User extends Component {
     render() {
+        // this.props.age = "18"; // TypeError
         return <div>{this.props.name}</div>
     }
 }
 ```
 
-Write: not modifiable
+Write: `TypeError: Cannot assign to read only property`
 
 <!-- vertical -->
 
@@ -54,22 +111,24 @@ Write: not modifiable
 
 ```jsx
 function User(props) {
-    render() {
-        // return <div>{props.name}</div>
-        return (
-            <div>{props.name}</div>
-        )
-    }
+	render() {
+		// return <div>{props.name}</div> // better wrapped with ()
+		return (
+			<div>{props.name}</div>
+		);
+	}
 }
 ```
 
-It's recommended to use `()` after `return` to avoid Automatic Semicolon Insertion
+* Component that do not need its own state
+* Read `props` insteaf of `this.props`
+* It's recommended to use `()` after `return` to avoid Automatic Semicolon Insertion
 
 Note: [Understanding Automatic Semicolon Insertion in JavaScript](http://www.bradoncode.com/blog/2015/08/26/javascript-semi-colon-insertion/ "")
 
 <!-- vertical -->
 
-`props.children` : [Composition vs Inheritance – React](https://reactjs.org/docs/composition-vs-inheritance.html "")
+`props.children` : [Try Me](https://codepen.io/gaearon/pen/ozqNOV?editors=0010 )
 
 ```jsx
 function FancyBorder(props) {
@@ -94,9 +153,11 @@ function WelcomeDialog() {
 }
 ```
 
+Note: [Composition vs Inheritance – React](https://reactjs.org/docs/composition-vs-inheritance.html "")
+
 <!-- vertical -->
 
-`PropTypes`
+**PropTypes**
 
 ```js
 import PropTypes from 'prop-types';
@@ -137,31 +198,17 @@ Props type check only works in development mode, ignored in production
 Declaration:
 
 ```jsx
-class Clock extends React.Component {
-	state = {
-		time: 0
+	constructor(props) {
+		super(props);
+		this.state = {
+			time: 0
+		}
 	}
-
-	componentDidMount() {
-		this.id = setInterval(() => {
-			this.setState({ time: this.state.time + 1 }, () => {
-				console.log('callback ' + this.state.time); 
-				// return 1 after setState
-			})
-		}, 1000); // will run asynchronously
-		console.log('subsequence ' + this.state.time); 
-		// return 0 instead of 1
-	}
-
-	render() {
-		return <div>{this.state.time}</div>
-	}
-}
 ```
 
-<!-- vertical -->
-
 Read: `this.state.time`
+
+<!-- vertical -->
 
 Write:
 
@@ -171,8 +218,31 @@ Write:
 2. `this.setState(newState[, callback])` 
   * change `this.state` and invoke re-render
   * React will combine multiple `setState()`  into one change and then run callback
+  * Asynchronous call: append operation to current event loop
 
+<!-- vertical -->
 
+```jsx
+class AsyncSetState extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = { time: 0 };
+		console.log('init ' + this.state.time); // 0
+	}
+	
+	componentDidMount() {
+		this.setState({time: this.state.time + 1}, () => {
+			console.log('callback ' + this.state.time); // return 1 after setState
+		});
+		console.log('subsequence ' + this.state.time); // return 0 instead of 1
+	}
+	
+	render() {
+		console.log('render ' + this.state.time); // 1st time 0, 2nd time 1
+		return <div>this.state.time: {this.state.time}</div>
+	}
+}
+```
 
 <!-- vertical -->
 
@@ -186,91 +256,95 @@ Write:
 
 <!-- vertical -->
 
-## Context
+## context
 
-From ancestor component to grandchildren component
+> Context provides a way to share values like these between components without having to explicitly pass a prop through every level of the tree.
 
-Not used very often
+* From ancestor to descendant component
+* It's better to user `context` for app level state, such as `Provider` provides `store`
+
+Note: [Context – React](https://reactjs.org/docs/context.html "")
 
 <!-- vertical -->
 
 ```js
 import PropTypes from 'prop-types';
 
-class Child extends React.Component {
-
-    static contextTypes = {
-        text: PropTypes.string
-    }
-
-    render() {
-        return <div> {this.context.text} </div>;
-    }
-}
-
 class Ancestor extends React.Component {
+	static childContextTypes = {
+		text: PropTypes.string
+	};
 
-    static childContextTypes = {
-        text: PropTypes.string
-    }
+	getChildContext() {
+		return { text: 'This is ancestor' };
+	};
 
-    getChildContext() {
-        return { text: 'ancestor' };
-    }
-}
+	render() {
+		return (
+			<span>{"ANCESTOR -> "}{this.props.children}</span>
+		);
+	};
+};
 ```
 
 <!-- vertical -->
 
-## Action Callback
+```javascript
+class Child extends React.Component {
+
+	static contextTypes = {
+		text: PropTypes.string
+	};
+
+	render() {
+		return (<div>{"CHILD -> " + this.context.text}</div>);
+	};
+}
+```
+<!-- vertical -->
+
+## From child to parent
+
+* pass callback function to child
+* use `ref` to read child status or DOM
+
+<!-- vertical -->
+
+### callback
+
+TODO add example
+
+<!-- vertical -->
 
 
+### `ref`
 
-## `ref`
+* get child component real DOM reference after `componentDidMount()` and `componentDidUpdate()`
+* Define ref:
+	- `<Child ref="nameInput"/>`
+	- `<Child ref={(input) => this.nameInput = input} />`
+
+<!-- vertical -->
 
 ```js
-class UseRef extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { userInput: '' };
-  }
+class SimpleRef extends React.Component {
+	constructor(props) {
+		super(props);
+		setTimeout(() => {
+			console.log(this.nameInput.value);
+			this.nameInput.focus(); // focus on text input
+			window.inputDOM = ReactDOM.findDOMNode(this.nameInput);
+			// try window.inputDOM.value = 'any'
+		}, 8000); // read input text after 8s
+	}
 
-  handleChange = (e) => {
-    this.setState({ userInput: e.target.value }, () => {
-      console.log('handleChange ' + JSON.stringify(this.state));
-    });
-  }
-
-  clearAndFocusInput = () => {
-    this.setState({ userInput: '' }, () => { // callback function
-      console.log('ref theInput');
-      window.theInput = ReactDOM.findDOMNode(this.refs.theInput);
-      ReactDOM.findDOMNode(this.refs.theInput).focus();
-      // this.refs.theInput.getDOMNode().focus(); // old style: before react v0.14
-
-      // console.log('ref callback theInput');
-      // window.theInput = this.theInput;
-      // this.theInput.focus();
-    });
-  }
-
-  render() {
-    return (
-      <div>
-        <input
-          type='button'
-          onClick={this.clearAndFocusInput}
-          value='Click to focus and clear'
-        />
-        <br />
-        <input
-          ref='theInput'
-          // ref={(compInstance) => {this.theInput = compInstance;}}
-          value={this.state.userInput}
-          onChange={this.handleChange}
-        />
-      </div>);
-  }
+	render() {
+		// ref callback will be triggered after 
+		// componentDidMount and componentDidUpdate
+		return (
+			<input ref={(input) => this.nameInput = input} type="text" />
+		);
+	}
 }
 ```
 
@@ -281,10 +355,10 @@ Note: [Refs and the DOM – React](https://reactjs.org/docs/refs-and-the-dom.htm
 ## High Order Component
 
 ```jsx
-import {Component} from React;
+import {React} from React;
 
 function hoc(Comp) {
-    return class EnhancedComponent extends Component {
+    return class EnhancedComponent extends React.Component {
         extendFunc() {
             // enhance component behavior
         }
@@ -316,28 +390,17 @@ const newAdapter = transProps(transPropsFunc)(aComp);
 
 <!-- vertical -->
 
-## VirtualDOM
+## Component Life Cycle
 
-![](public/react-virtual-dom.png )
+* Mounting -> Updating -> Unmounting
+* Hook functions provided by React
 
 <!-- vertical -->
 
-TODO: add VDOM and Real DOM image
+![react_life_cycle_3_phases](public\react_life_cycle_3_phases.png )
 
 Note:
-[The Inner Workings Of Virtual DOM – rajaraodv – Medium](https://medium.com/@rajaraodv/the-inner-workings-of-virtual-dom-666ee7ad47cf "")
-[How Virtual-DOM and diffing works in React – Gethyl George Kurian – Medium](https://medium.com/@gethylgeorge/how-virtual-dom-and-diffing-works-in-react-6fc805f9f84e "")
-[Virtual DOM: How inefficiency can lead to better performance - AFAS Dev](https://dev.afas.nl/blog-dev/virtual-dom-how-inefficiency-can-lead-to-better-performance "")
-[Understanding the Virtual DOM](https://bitsofco.de/understanding-the-virtual-dom/ "")
-[The Real Benefits of the Virtual DOM in React.js](https://www.accelebrate.com/blog/the-real-benefits-of-the-virtual-dom-in-react-js/ "")
-
-<!-- vertical -->
-
-## Life Cycle
-
-* `shouldComponentUpdate()` reduce unnecessary redraw to improve performance
-* `componentWillReceiveProps()` sync new `props` to `state`
-* `componentWillUnmount()` clean resources
+[React lifecycle methods diagram](http://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/ "")
 
 <!-- vertical -->
 
@@ -345,27 +408,68 @@ Note:
 
 <!-- vertical -->
 
-When will a compoent redraw?
+Mounting
+
+* `constructor()`
+  - set initial value for state
+* `componentWillMount()`
+* `render()`
+  - should be pure function
+  - draw UI with initial state
+* `componentDidMount()`
+  - usually dispatch load data action
+
+<!-- vertical -->
+
+Updating - When will a component redraw?
 
 1. Parent `props` update
-   * `componentWillReceiveProps()`
-   * `shouldComponentUpdate()`
-   * `componentWillUpdate()`
+   * `componentWillReceiveProps(nextProps)`
+   * `shouldComponentUpdate(nextProps, nextState)`
+   * `componentWillUpdate(nextProps, nextState)`
    * `render()`
-   * `componentDidUpdate()`
+   * `componentDidUpdate(prevProps, prevState)`
 <!-- vertical -->
 2. Own `state` change
-   * `shouldComponentUpdate()`
-   * `componentWillUpdate()`
+   * `shouldComponentUpdate(nextProps, nextState)`
+   * `componentWillUpdate(nextProps, nextState)`
    * `render()`
-   * `componentDidUpdate()`
+   * `componentDidUpdate(prevProps, prevState)`
 <!-- vertical -->
 3. `this.forceUpdate()`
-   * `componentWillUpdate()`
+   * `componentWillUpdate(nextProps, nextState)`
    * `render()`
-   * `componentDidUpdate()`
+   * `componentDidUpdate(prevProps, prevState)`
 <!-- vertical -->
 
+* `componentWillReceiveProps(nextProps)`
+  - usually sync `props` change to component `state`
+  - unsafe in React 16
+* `shouldComponentUpdate(nextProps, nextState)`
+  - currProps -> `this.props`, currState -> `this.state`
+  - need to re-render given new props and state ? return `true` by default implementation
+  - reduce unnecessary `render()` to improve performance
+<!-- vertical -->
+* `componentWillUpdate(nextProps, nextState)`
+  - perform preparation before an update occurs. 
+  - unsafe in React 16
+* `componentDidUpdate(prevProps, prevState)`
+  - invoked immediately after updating occurs
+  - `setState()` here may cause infinite loop, be very careful
+
+Note:
+![shouldcomponentupdate()](https://reactjs.org/docs/react-component.html#shouldcomponentupdate )
+![componentdidupdate()](https://reactjs.org/docs/react-component.html#componentdidupdate )
+
+<!-- vertical -->
+Unmounting
+
+* `componentWillUnmount()`
+  - usually corresponding to `componentDidMount()`
+  - should release resource: clear timer, remove event listener
+  - will be called if be parent component re-render
+
+<!-- vertical -->
 
 ```js
 class WindowWidth extends React.Component {
@@ -393,37 +497,56 @@ class WindowWidth extends React.Component {
 	}
 }
 ```
+
 <!-- vertical -->
 
+![React setState() correct usage](public/react_setstate_usage.png )
+
+Note:
 [Get and debug event listeners &nbsp;|&nbsp; Web      &nbsp;|&nbsp; Google Developers](https://developers.google.com/web/updates/2015/05/get-and-debug-event-listeners "")
 
 [javascript - When does a component unmount? - Stack Overflow](https://stackoverflow.com/questions/41498756/when-does-a-component-unmount "")
 
 TODO: when will datagrid be unmounted ?
 
-
-
 <!-- vertical -->
 
 
-![React setState() correct usage](public/react_setstate_usage.png )
+## Redux: State Management
+
+![:scale 100%, ](public/why_use_store.png)
 
 <!-- vertical -->
 
-![:scale 100%](public/react_life_cycle.png)
+## Flux
 
-Note: [ReactJs component lifecycle methods — A deep dive – Hacker Noon](https://hackernoon.com/reactjs-component-lifecycle-methods-a-deep-dive-38275d9d13c0 "")
+* Intended to be used in companion with React
+* Similar to traditional MVC pattern
+  - React as View
+  - Store as Model
+  - Action + Dispatcher as Controller
+
+<!-- vertical -->
+
+<img src="public/flux_pattern.jpg" alt="Flux Pattern" style="background:none; border:none; box-shadow:none;" height="700px"/>
+
+Note:
+
+[Flux vs MVC Design Pattern - Madasamy M - Medium](https://medium.com/@madasamy/flux-vs-mvc-design-pattern-de134dfaa12b "")
 
 <!-- vertical -->
 
+### Redux VS Flux
 
-## State Management
+* Created by Dan Dan Abramov
+* `Redux = reducer + Flux`
+* More strict to control data flow than Flux
+  - Single Source of Truth
+  - Dispatcher simplified to `store.dispatch()`
+  - State is read-only (no direct write)
+  - Changes are made with pure functions (`reducer`)
 
-### Flux versus Redux
-
-
-
-<!-- vertical -->
+Note: 
 
 [What Does Redux Do? (and when should you use it?)](https://daveceddia.com/what-does-redux-do/ "") ✔✔✔✔
 
@@ -431,11 +554,11 @@ Note: [ReactJs component lifecycle methods — A deep dive – Hacker Noon](http
 
 <!-- vertical -->
 
-![:scale 100%, ](public/why_use_store.png)
+![Flux Versus Redux](public/flux_vs_redux.jpg)
 
-<!-- vertical -->
+Note:
 
-<img src="public/flux_pattern.jpg" alt="Flux Pattern" style="background:none; border:none; box-shadow:none;" height="700px"/>
+![Flux Versus Redux](public/flux_vs_redux_2.png)
 
 <!-- vertical -->
 
@@ -443,13 +566,7 @@ Note: [ReactJs component lifecycle methods — A deep dive – Hacker Noon](http
 
 <!-- vertical -->
 
-![:scale 100%, Flux Versus Redux](public/flux_vs_redux.jpg)
-
-Note:
-![:scale 100%, Flux Versus Redux](public/flux_vs_redux_2.png)
-
-<!-- vertical -->
-
+TODO: [Understanding Redux: The World’s Easiest Guide to Beginning Redux](https://www.freecodecamp.org/news/understanding-redux-the-worlds-easiest-guide-to-beginning-redux-c695f45546f6/ "")
 
 这一部分可以参考 [自述 · GitBook](http://cn.redux.js.org/index.html "")
 
@@ -494,6 +611,19 @@ store.dispatch({ type: 'INCREMENT' })
 store.dispatch({ type: 'DECREMENT' })
 // 1
 ```
+
+<!-- vertical -->
+
+## React-Redux
+
+```js
+import { Provider } from 'react-redux';
+
+export default connect( mapStateToProps, mapDispatchToProps)( Counter);
+```
+
+`mapStateToProps()`
+`mapDispatchToProps()`
 
 <!-- vertical -->
 
@@ -590,7 +720,7 @@ timeout(1000, fetch('/hello')).then(function(response) {
 
 <!-- vertical -->
 
-## Usual Component
+## Common Component
 
 ### IntlProvider
 
@@ -619,10 +749,6 @@ let btnType = 'primary';
 classNames({ [`btn-${btnType}`]: true }); // "btn-primary"
 ```
 
-TODO: add real example
-
-
-
 <!-- vertical -->
 
 ### Integrate with jQuery
@@ -638,4 +764,70 @@ $(rootEle).modal({backdrop: 'static', keyboard: false, show: false});
 $(rootELe).on('hidden.bs.modal', this.handleHidden);
 ```
 
+Note: 
 [javascript - How to use JQuery with ReactJS - Stack Overflow](https://stackoverflow.com/questions/38518278/how-to-use-jquery-with-reactjs "")
+
+<!-- vertical -->
+
+## React Start Up
+
+1. Local HTML Template
+2. Online CodePen
+3. `create-react-app`
+  - Recommended
+
+<!-- vertical -->
+
+### Local HTML Template
+
+* [download this HTML template](https://raw.githubusercontent.com/reactjs/reactjs.org/master/static/html/single-file-example.html)
+* handy for quick small testing, should not use in production
+* write React code inside `text/babel` script block
+* not able to import 3rd party libraries
+
+<!-- vertical -->
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello World</title>
+</head>
+<body>
+  <div id="root"></div>
+	<script type="text/babel">
+		ReactDOM.render(
+			<h1>Hello, world!</h1>,
+			document.getElementById('root')
+		);
+	</script>
+	
+	<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+	<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+	<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+</body>
+</html>
+```
+<!-- vertical -->
+
+### Online CodePen
+
+[A Pen by Dan Abramov](https://codepen.io/gaearon/pen/ozqNOV?editors=0010 "")
+
+* HTML/CSS/JS(Babel)
+* Do not paste code
+
+<!-- vertical -->
+
+### `create-react-app`
+
+```bash
+$ create-react-app proj_name
+$ npm start     # http://localhost:3000/
+$ npm run eject # eject hidden config files and can't revert back
+```
+
+* boilerplate
+* HMR
