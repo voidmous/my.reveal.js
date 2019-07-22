@@ -26,20 +26,6 @@ TODO: add VDOM and Real DOM image
 
 <!-- vertical -->
 
-## Top-Level API
-
-```js
-React.createElement(
-  type,
-  [props],
-  [...children]
-)
-```
-
-Note: [React Top-Level API – React](https://reactjs.org/docs/react-api.html "")
-
-<!-- vertical -->
-
 ## JSX
 
 > JSX, or JavaScript XML, is an extension to the JavaScript language syntax.
@@ -248,11 +234,11 @@ class AsyncSetState extends React.Component {
 
 ###  `props` versus `state`
 
-| Comparison   | `props`                      | `state`                                  |
-| ------------ | ---------------------------- | ---------------------------------------- |
-| Usage        | data from parent to children | inner state of a component               |
-| Modification | unmodifiable                 | call `setState()` from inside or outside |
-|              |                              |                                          |
+| Comparison     | `props`                      | `state`                         |
+| ------------   | ---------------------------- | ------------------------------- |
+| Usage          | data from parent to children | inner state of a component      |
+| Modification   | immutable                    | call `setState()`               |
+| Initialization |  `getDefaultProps()`         | `getInitialState()`             |
 
 <!-- vertical -->
 
@@ -319,10 +305,11 @@ TODO add example
 
 ### `ref`
 
-* get child component real DOM reference after `componentDidMount()` and `componentDidUpdate()`
+* get child component actual DOM reference after `componentDidMount()` and `componentDidUpdate()`
 * Define ref:
 	- `<Child ref="nameInput"/>`
 	- `<Child ref={(input) => this.nameInput = input} />`
+* Using ref is generally not recommended, especially changing DOM
 
 <!-- vertical -->
 
@@ -543,7 +530,7 @@ Note:
 * More strict to control data flow than Flux
   - Single source of truth
   - Dispatcher got simplified to `store.dispatch()`
-  - State is read-only (no direct write)
+  - State is read-only (no direct write, dispatch actions)
   - Changes are made with pure functions (`reducer`)
 
 Note: 
@@ -566,8 +553,217 @@ Note:
 
 <!-- vertical -->
 
-* `redux` gives you a store, and lets you keep state in it, and get state out, and respond when the state changes
-* `react-redux` lets you connect pieces of the state to React components
+### Action
+
+> An action is a plain JavaScript object that describes in a minimal way what needs to get updated in the application state.
+
+* **type**: string identifier to distinct different actions
+* **payload**: necessary data to be shipped with action
+* Action is similar to browser event
+
+<!-- vertical -->
+
+```javascript
+function displayAlert() {
+  return {
+      type: 'DISPLAY_ALERT',
+      payload: {
+        message: 'Something went wrong'
+      }
+  };
+}
+```
+
+<!-- vertical -->
+
+### Reducer
+
+> Reducers are **pure functions** which describe state mutations. Unlike actions, reducers do know how to have things changed in the application state, they do know the implementation details for those changes.
+
+* `(prevState, action) => nextState`
+
+<!-- vertical -->
+
+### Store
+
+* Maintain global `state`
+  - `store.getState()`
+  - `store.dispatch(action)`
+  - `store.subscribe(listener)`
+    * `listener` is callback function
+    * returns a unsubscribe function
+
+```js
+const listener = () => {
+  console.log('state changed, do something');
+}
+const unsubscribe = store.subscribe(listener);
+unsubscribe();
+```
+
+<!-- vertical -->
+
+A simplified version of `createStore()`
+```js
+function createStore(reducer) {
+  let state;
+  let listeners = [];  // registered listeners (call back function array)
+  
+  const getState = () => state;
+  
+  const dispatch = (action) => {
+    state = reducer(state, action);  // reducer change state
+    listeners.forEach(listener => listener()); // notify all listener
+  };
+  
+  const subscribe = (listener) => {
+    listeners.push(listener);
+    return () => { // return all listener except listener passed in
+      listeners = listeners.filter(l => l !== listener);
+    };
+  };
+  
+  dispatch({ type: '@@redux/INIT' }); // system action by Redux itself
+  
+  return { getState, dispatch, subscribe };
+};
+```
+<!-- vertical -->
+
+`const store = createStore(reducer[, initialState[, enchancer]]);`
+
+```js
+import { createStore } from 'redux';
+
+function todos(state = [], action) {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return state.concat([action.text]);
+    default:
+      return state;
+  }
+}
+
+const store = createStore(todos, ['Use Redux']);
+
+store.dispatch({
+  type: 'ADD_TODO',
+  text: 'Read the docs'
+});
+
+console.log(store.getState());
+// [ 'Use Redux', 'Read the docs' ]
+```
+
+Note: [createStore · Redux](https://redux.js.org/api/createstore "")
+
+<!-- vertical -->
+
+* `redux` package gives you a store, and lets you keep state in it, and get state out, and respond when the state changes
+* `react-redux` package lets you connect pieces of the state to React components
+  - `<Provider store={store}/>` providers a container with store as context for child components
+  - `connect` higher-order component
+
+Note:
+
+[A look at the inner workings of Redux - Federico Knüssel - Medium](https://medium.com/@fknussel/redux-3cb5aac94a66 "")
+* [fknussel/redux-from-scratch: Implementing redux, react-redux and redux-thunk from scratch](https://github.com/fknussel/redux-from-scratch?source=post_page--------------------------- "")
+* [    Leveling Up with React: Redux | CSS-Tricks  ](https://css-tricks.com/learning-react-redux/?source=post_page--------------------------- "")
+* [Redux Tutorial by Dan Abramov on egghead.io](https://egghead.io/courses/getting-started-with-redux?source=post_page--------------------------- "")
+* [Understanding Redux Middleware - Mark - Medium](https://medium.com/@meagle/understanding-87566abcfb7a "")
+* [Understanding Redux + React in Easiest Way Part-1 - Javascript Developers - Medium](https://medium.com/tkssharma/understanding-redux-react-in-easiest-way-part-1-81f3209fc0e5 "")
+* [Redux for React: A Simple Introduction - Ross Bulat - Medium](https://medium.com/@rossbulat/redux-for-react-a-simple-introduction-b1f9dcbda8f4 "")
+<!-- vertical -->
+
+A simplified version of `Provider`
+
+```js
+export class Provider extends React.Component {
+  getChildContext() {
+    return {
+      store: this.props.store
+    };
+  }
+
+  render() {
+    return this.props.children;
+  }
+}
+
+Provider.childContextTypes = {
+  store: React.PropTypes.object.isRequired
+};
+```
+
+<!-- vertical -->
+
+> The purpose of connect is to return a container component which is connected to the store: it injects part of the Redux state and also actions into our components as props, and it’s also part of the react-redux library.
+
+<!-- vertical -->
+
+A simplified verison of `connect()`
+
+```js
+export function connect(mapStateToProps, mapDispatchToProps) {
+  return function (WrappedComponent) {
+    class ConnectedWrappedComponent extends React.Component {
+      componentDidMount() {
+        const {subscribe} = this.context.store;
+        this.unsubscribe = subscribe(this.handleChange.bind(this));
+      }
+
+      componentWillUnmount() {
+        this.unsubscribe();
+      }
+
+      handleChange() {
+        this.forceUpdate();
+      }
+
+      render() {
+        const {getState, dispatch} = this.context.store;
+        return (
+          <WrappedComponent
+            {...this.props}
+            {...mapStateToProps(getState(), this.props)}
+            {...mapDispatchToProps(dispatch, this.props)} />
+        );
+      }
+    }
+
+    ConnectedWrappedComponent.contextTypes = {
+      store: React.PropTypes.object.isRequired
+    };
+
+    return ConnectedWrappedComponent;
+  };
+}
+```
+
+<!-- vertical -->
+
+`mapStateToProps` and `mapDispatchToProps`
+
+```js
+function mapStateToProps(state) {
+  return {
+    count: state.counter
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    increment: dispatch({ type: 'INCREMENT' }),
+    decrement: dispatch({ type: 'DECREMENT' })
+  };
+}
+export connect(mapStateToProps, mapDispatchToProps)(Counter);
+```
+
+<!-- vertical -->
+
+> Action creators are nothing other than functions returning an object.
+
+Note: [bindActionCreators · Redux](https://redux.js.org/api/bindactioncreators "")
 
 <!-- vertical -->
 
@@ -647,36 +843,40 @@ export default connect(mapStateToProps)(Counter);
 import { createStore } from 'redux'
 
 /**
- * 这是一个 reducer，形式为 (state, action) => state 的纯函数。
- * 描述了 action 如何把 state 转变成下一个 state。
+ * This is a reducer, a pure function with (state, action) => state signature.
+ * It describes how an action transforms the state into the next state.
  *
- * state 的形式取决于你，可以是基本类型、数组、对象、
- * 甚至是 Immutable.js 生成的数据结构。惟一的要点是
- * 当 state 变化时需要返回全新的对象，而不是修改传入的参数。
+ * The shape of the state is up to you: it can be a primitive, an array, an object,
+ * or even an Immutable.js data structure. The only important part is that you should
+ * not mutate the state object, but return a new object if the state changes.
  *
- * 下面例子使用 `switch` 语句和字符串来做判断，但你可以写帮助类(helper)
- * 根据不同的约定（如方法映射）来判断，只要适用你的项目即可。
+ * In this example, we use a `switch` statement and strings, but you can use a helper that
+ * follows a different convention (such as function maps) if it makes sense for your
+ * project.
  */
 function counter(state = 0, action) {
-	switch (action.type) {
-		case 'INCREMENT':
-			return state + 1
-		case 'DECREMENT':
-			return state - 1
-		default:
-			return state
-	}
+  switch (action.type) {
+    case 'INCREMENT':
+      return state + 1
+    case 'DECREMENT':
+      return state - 1
+    default:
+      return state
+  }
 }
 
-// 创建 Redux store 来存放应用的状态。
-// API 是 { subscribe, dispatch, getState }。
+// Create a Redux store holding the state of your app.
+// Its API is { subscribe, dispatch, getState }.
 let store = createStore(counter)
 
-// 可以手动订阅更新，也可以事件绑定到视图层。
+// You can use subscribe() to update the UI in response to state changes.
+// Normally you'd use a view binding library (e.g. React Redux) rather than subscribe() directly.
+// However it can also be handy to persist the current state in the localStorage.
+
 store.subscribe(() => console.log(store.getState()))
 
-// 改变内部 state 惟一方法是 dispatch 一个 action。
-// action 可以被序列化，用日记记录和储存下来，后期还可以以回放的方式执行
+// The only way to mutate the internal state is to dispatch an action.
+// The actions can be serialized, logged or stored and later replayed.
 store.dispatch({ type: 'INCREMENT' })
 // 1
 store.dispatch({ type: 'INCREMENT' })
@@ -687,9 +887,11 @@ store.dispatch({ type: 'DECREMENT' })
 
 Note:
 
+[Getting Started with Redux · Redux](https://redux.js.org/introduction/getting-started "")
+
 TODO: [Understanding Redux: The World’s Easiest Guide to Beginning Redux](https://www.freecodecamp.org/news/understanding-redux-the-worlds-easiest-guide-to-beginning-redux-c695f45546f6/ "")
 
-这一部分可以参考 [自述 · GitBook](http://cn.redux.js.org/index.html "")
+这一部分可以参考 [Redux中文文档 · GitBook](http://cn.redux.js.org/index.html "")
 
 <!-- vertical -->
 
@@ -859,19 +1061,21 @@ timeout(1000, fetch('/hello')).then(function(response) {
 
 ## Common Component
 
+<!-- vertical -->
+
 ### IntlProvider
 
 `window.Intl`
 
-
-
-### Provider
-
-store
+<!-- vertical -->
 
 ### DragNDrop
 
 HTML5 Drag and Drop
+
+### React-Route
+
+<!-- vertical -->
 
 <!-- vertical -->
 

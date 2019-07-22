@@ -174,6 +174,7 @@ body {
   word-wrap: normal; }
 
 .reveal table {
+  font-size: 80%;
   margin: auto;
   border-collapse: collapse;
   border-spacing: 0; }

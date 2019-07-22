@@ -1,6 +1,12 @@
 # Node.js
 
-> Node.js is an open-source, cross-platform JavaScript run-time environment that executes JavaScript code outside of a browser. 
+> Node.js is an open-source, cross-platform JavaScript run-time envirronment that executes JavaScript code outside of a browser. 
+
+Note: 
+
+[The Javascript Runtime Environment - Jamie Uttariello - Medium](https://medium.com/@olinations/the-javascript-runtime-environment-d58fa2e60dd0 "")
+
+[How JavaScript works: an overview of the engine, the runtime, and the call stack](https://blog.sessionstack.com/how-does-javascript-actually-work-part-1-b0bacc073cf "")
 
 <!-- vertical -->
 

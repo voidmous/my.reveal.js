@@ -1,6 +1,20 @@
 # Appendix
 
+<!-- vertical -->
 
+## Top-Level API
+
+```js
+React.createElement(
+  type,
+  [props],
+  [...children]
+)
+```
+
+Note: [React Top-Level API – React](https://reactjs.org/docs/react-api.html "")
+
+<!-- vertical -->
 
 ## `npm` versus `yarn`
 

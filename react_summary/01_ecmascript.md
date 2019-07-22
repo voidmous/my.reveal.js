@@ -61,9 +61,8 @@ c.c = 'd'; // {c: "d"}
 <!-- vertical -->
 
 ```js
-
 // function scope
-let fun = function () {
+let func = function () {
 	var i = 1;
 	let j = 2;
 	const k = 3;
@@ -71,7 +70,7 @@ let fun = function () {
 	console.log(j);
 	console.log(k);
 }
-fun(); // 1 2 3
+func(); // 1 2 3
 console.log(i); // Uncaught ReferenceError: i is not defined
 console.log(j); // Uncaught ReferenceError: j is not defined
 console.log(k); // Uncaught ReferenceError: k is not defined
@@ -81,7 +80,6 @@ console.log(k); // Uncaught ReferenceError: k is not defined
 <!-- vertical -->
 
 ```js
-
 // block scope 1
 {
 	var x = 4;
@@ -213,15 +211,15 @@ JSON.stringify(person);
 
 ### Destructuring Assignment
 
-Syntax of extracting values from an array or object and assign to variables
+> Syntax of extracting values from an array or object and assign to variables
 
 ```js
-let [a, b, c] = [1, 2, 3];
-let [x, y = 'b'] =  ['a'];
+let [a, b, c] = [1, 2]; // a:1 b:2 c:undefined
+let [x, y = 'b'] =  ['a']; // x:'a' y:'b'
 
-let {foo: f, bar: b} = { foo: 'aaa', bar: 'bbb'};
+let {foo: f, bar} = { foo: 'aaa', bar: 'bbb'};
 f // "aaa"
-b // "bbb"
+bar // "bbb"
 
 function example() {
 	return {
@@ -238,7 +236,7 @@ Note:
 
 <!-- vertical -->
 
-### `...` Rest/Spread
+### `...` Rest/Spread Operator
 
 ```js
 // Rest properties collect the remaining own enumerable property keys 
@@ -251,8 +249,28 @@ z; // { a: 3, b: 4 }
 
 // Spread properties in object initializers copies own enumerable 
 // properties from a provided object onto the newly created object.
-let n = { x, y, a: 99, ...z, b: 99 }; // sequence does matter !!
+let n = { x, y, a: 99, ...z, b: 99 }; // !! sequence does matter
 n; // {x: 1, y: 2, a: 3, b: 99}
+```
+
+<!-- vertical -->
+
+```js
+// Copy an array
+var arr = [1, 2, 3];
+var arr2 = [...arr]; // like arr.slice()
+arr2.push(4); 
+// arr2 becomes [1, 2, 3, 4]
+// arr remains unaffected
+
+// !! SPREAD is shallow clone
+const original = {a: {b: 1}};
+const falseCopy = {...original};
+
+falseCopy.a.b = 2;
+
+console.log(falseCopy) // logs {a: {b: 2}}
+console.log(original) // also logs {a: {b: 2}} WTF!
 ```
 
 Note: 
@@ -262,6 +280,37 @@ Note:
 [Rest parameters - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters "")
 
 [tc39/proposal-object-rest-spread: Rest/Spread Properties for ECMAScript](https://github.com/tc39/proposal-object-rest-spread "")
+
+<!-- vertical -->
+
+### Shallow/Deep Clone Object
+
+```js
+var oldObject = {
+  name: 'A',
+  address: {
+    street: 'Station Road',
+    city: 'Pune'
+  }
+}
+var newObject = JSON.parse(JSON.stringify(oldObject));
+
+newObject.address.city = 'Delhi';
+console.log('newObject');
+console.log(newObject);
+console.log('oldObject');
+console.log(oldObject);
+```
+
+Note: 
+
+[javascript - Deep copy in ES6 using the spread syntax - Stack Overflow](https://stackoverflow.com/questions/38416020/deep-copy-in-es6-using-the-spread-syntax "")
+
+[Spread Operator Does Not Deep Copy Properties - Bambielli’s Blog](https://bambielli.com/til/2017-01-29-spread-operator-deep-copy/ "")
+
+[Object.assign() - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign "")
+
+[How to deep clone a JavaScript object](https://flaviocopes.com/how-to-clone-javascript-object/ "")
 
 <!-- vertical -->
 
@@ -317,12 +366,10 @@ console.log(target2);
 
 <!-- vertical -->
 
-
-
 ### Symbol
 
 
-
+<!-- vertical -->
 
 
 ### Function Extension
@@ -335,6 +382,7 @@ console.log(target2);
 * Make function declaration simpler
 * Automatically bind right `this`
 	- Arrow functions cannot be used as constructors and will throw an error when used with new.
+	- TODO
 
 Note: [Arrow functions - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions "")
 
@@ -345,7 +393,7 @@ const headAndTail = (head, ...tail) => [head, tail];
 headAndTail(1, 2, 3, 4, 5);
 // [1,[2,3,4,5]]
 
-// ES6
+// ES6 arrow function with destruction assignment
 const full = ({ first, last }) => first + " " + last; // note the {}
 
 // ES5 equivalence
@@ -728,6 +776,8 @@ add1ThenDouble(2); // 6
 // ((2 + 1 = 3) * 2 = 6)
 ```
 
+Note:
+
 [JavaScript Functional Programming — map, filter and reduce](https://medium.com/jsguru/javascript-functional-programming-map-filter-and-reduce-846ff9ba492d "")
 
 [Simplify your JavaScript – Use .map(), .reduce(), and .filter()](https://medium.com/poka-techblog/simplify-your-javascript-use-map-reduce-and-filter-bd02c593cc2d "")
@@ -744,7 +794,7 @@ add1ThenDouble(2); // 6
 	- mainly used in server side (Node.js)
 * AMD
 	- load modules asynchronously
-	- used mostly in front-end
+	- used mostly in traditional front-end
 * ES6 Module
 
 <!-- vertical -->
