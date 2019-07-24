@@ -675,11 +675,53 @@ class Example {
 
 ### Functional Programming
 
+<!-- vertical -->
+
+#### First-class Entity
+
+Functions as first-class entities can:
+
+- refer to it from constants and variables
+- pass it as a parameter to other functions
+- return it as result from other functions
+
+Note:
+
+TODO Add example of function usage in javascript here
+
+[Functional Programming Principles in Javascript](https://www.freecodecamp.org/news/functional-programming-principles-in-javascript-1b8fc6c3563f/ "")
+
+<!-- vertical -->
+
+#### Pure Function
+
+* It returns the same result if given the same arguments
+* It does not cause any observable side effects
+
+Note: 
+
+[reactjs - Redux: Why making a shallow copy of one level of the state is a mistake? - Stack Overflow](https://stackoverflow.com/questions/44258716/redux-why-making-a-shallow-copy-of-one-level-of-the-state-is-a-mistake "")
+
+[javascript - Why is it considered ok to mutate a shallow copy of my state? - Stack Overflow](https://stackoverflow.com/questions/39078819/why-is-it-considered-ok-to-mutate-a-shallow-copy-of-my-state "")
+
+<!-- vertical -->
+
 - **`forEach()`**: doesn't return anything, but lets you do something with each original value
 - **`map()`**: creates a new array with one value for each item in the original array
 - **`filter()`**: creates a new array containing only the original values where the callback returned `true`
 - **`reduce()`**: produces one new value based on the contents of the original array
 
+<!-- vertical -->
+
+<!-- ![map filter reduce emoji](./public/map_filter_reduce_emoji.jpg ) -->
+
+<img src="public/map_filter_reduce_emoji.jpg" alt="map filter reduce emoji" style="background:none; border:none; box-shadow:none;" height="600px"/>
+
+Note:
+
+TODO: [Swift Guide to Map Filter Reduce](https://useyourloaf.com/blog/swift-guide-to-map-filter-reduce/ "")
+
+![Java 8 Streams Cheat Sheet](https://jrebel.com/wp-content/uploads/2016/01/Java-8-Streams-cheat-sheet-v3.png )
 
 <!-- vertical -->
 
@@ -711,48 +753,6 @@ const sum = values.reduce(addNumbers, 0);
 
 <!-- vertical -->
 
-
-#### Pure Function
-
-* It returns the same result if given the same arguments
-* It does not cause any observable side effects
-
-
-
-<!-- vertical -->
-
-
-
-#### First-class Entity
-
-Functions as first-class entities can:
-
-- refer to it from constants and variables
-- pass it as a parameter to other functions
-- return it as result from other functions
-
-Note:
-
-[Functional Programming Principles in Javascript](https://www.freecodecamp.org/news/functional-programming-principles-in-javascript-1b8fc6c3563f/ "")
-
-<!-- vertical -->
-
-
-#### `map`, `reduce`, `filter` Javascript Array Methods
-
-![map filter reduce emoji](./public/map_filter_reduce_emoji.jpg )
-
-
-
-TODO: [Swift Guide to Map Filter Reduce](https://useyourloaf.com/blog/swift-guide-to-map-filter-reduce/ "")
-
-
-
-![Java 8 Streams Cheat Sheet](https://jrebel.com/wp-content/uploads/2016/01/Java-8-Streams-cheat-sheet-v3.png )
-
-<!-- vertical -->
-
-
 ```js
 const numbers = [2, 4, 8, 10];
 const halves = numbers.map(x => x / 2);
@@ -781,7 +781,6 @@ Note:
 [JavaScript Functional Programming — map, filter and reduce](https://medium.com/jsguru/javascript-functional-programming-map-filter-and-reduce-846ff9ba492d "")
 
 [Simplify your JavaScript – Use .map(), .reduce(), and .filter()](https://medium.com/poka-techblog/simplify-your-javascript-use-map-reduce-and-filter-bd02c593cc2d "")
-
 
 
 <!-- vertical -->

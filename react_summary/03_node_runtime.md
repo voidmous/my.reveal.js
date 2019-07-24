@@ -24,6 +24,7 @@ Note:
 ![NPM vs Yarn](public/npm_yarn.svg)
 
 Note:
+
 ```graphviz
 digraph {
     start [shape=circle label=< > width=0.5 style=filled]
@@ -39,6 +40,8 @@ digraph {
 }
 ```
 
+TODO: Difference between run in command line and run script in `package.json`?
+
 <!-- vertical -->
 
 ### package.json
@@ -51,10 +54,6 @@ digraph {
   - `npm install --save <pkg>`
 * **devDependencies**: necessary for running DEV tools (babel transpile, webpack toolchain, lint, test)
   - `npm install --save-dev <pkg>`
-
-<!-- vertical -->
-
-TODO: Difference between run in command line and run script in `package.json`?
 
 <!-- vertical -->
 
@@ -149,7 +148,10 @@ module.exports = {
 
 2. Output
 
-there can be multiple `entry` points, only one `output` configuration is specified.
+* There can be multiple `entry` points, only one `output` configuration is specified.
+* Output file name can be dynamic
+  - Check in compiled output file is inconvenient
+  - Include output file dynamicly in HTML page
 
 ```js
 module.exports = {
@@ -165,6 +167,11 @@ module.exports = {
 };
 ```
 
+<!-- vertical -->
+
+* Use file content hash as output file name
+* Every time file content changed, user will download newly compiled script
+
 ```js
 module.exports = {
   //...
@@ -177,13 +184,72 @@ module.exports = {
 
 <!-- vertical -->
 
-3. Plugin
+3. Loaders
+
+> Loaders allow webpack to process other types of files and convert them into valid modules that can be consumed by your application and added to the dependency graph.
+
+1. The `test` property identifies which file or files should be transformed by regular expression
+2. The `use` property indicates which loader should be used to do the transforming
 
 <!-- vertical -->
 
-4. Module
+```javascript
+module.exports = {
+  output: {
+    filename: 'my-first-webpack.bundle.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
+      {
+        test: /\.html$/,
+        use: [
+          {
+            loader: "html-loader",
+            options: { minimize: true }
+          }
+        ]
+      }
+    ]
+  }
+};
+```
+
+<!-- vertical -->
+
+4. Plugin
+
+> Plugins can be leveraged to perform a wider range of tasks like bundle optimization, asset management and injection of environment variables.
 
 
+
+```javascript
+const HtmlWebpackPlugin = require('html-webpack-plugin'); //installed via npm
+const webpack = require('webpack'); //to access built-in plugins
+
+module.exports = {
+  module: {
+    rules: [
+      { test: /\.txt$/, use: 'raw-loader' }
+    ]
+  },
+  plugins: [
+    new HtmlWebpackPlugin({template: './src/index.html'})
+  ]
+};
+```
+
+<!-- vertical -->
+
+5. Dependency Graph
+
+> Starting from these **entry points**, webpack recursively builds a dependency graph that includes every module your application needs, then bundles all of those modules into a small number of bundles - often, just one - to be loaded by the browser.
 
 <!-- vertical -->
 
@@ -194,39 +260,53 @@ module.exports = {
 3. css-loader
 4. style-loader
 
-TODO add webpack css loader configuration
+```shell
+$ npm install style-loader css-loader --save-dev
+```
 
-<!-- vertical -->
+```javascript
+// webpack.config.js
+module.exports = {
+	...
+    module: {
+        rules: [{
+            test: /\.scss$/,
+            use: [
+                "style-loader", // creates style nodes from JS strings
+                "css-loader", // translates CSS into CommonJS
+                "sass-loader" // compiles Sass to CSS, using Node Sass by default
+            ]
+        }]
+    }
+};
+```
+
+Note: [webpack-contrib/sass-loader: Compiles Sass to CSS](https://github.com/webpack-contrib/sass-loader "")
 
 ### Common plugins
 
-TODO ExtractTextPlugin("bundle.css")
+ExtractTextPlugin("bundle.css")
 
 DefinePlugin
 
 HtmlWebpackPlugin
 
-
-
 <!-- vertical -->
 
 ### [Hot Module Replacement](https://webpack.js.org/concepts/hot-module-replacement "")
 
-> Hot Module Replacement (HMR) exchanges, adds, or removes modules while an application is running, without a full reload.
-
-<!-- vertical -->
-
-![](https://uploads.toptal.io/blog/image/126624/toptal-blog-image-1531492763968-39dfd789f841e20fa94d1e387789c9bc.png )
+> Hot Module Replacement (HMR) exchanges, adds, or removes modules while an application is running, without a full refresh.
 
 <!-- vertical -->
 
 ![Webpack HMR Mechanics](https://www.javascriptstuff.com/static/webpack-overview-diagram-de23dc03e5ee143a3d1f1ec7e4c72eff-18766.png )
 
-
 Note:
 
-[A Minimal Example of HMR in a Redux Application | Toptal](https://www.toptal.com/javascript/hot-module-replacement-in-redux "")
+![](https://uploads.toptal.io/blog/image/126624/toptal-blog-image-1531492763968-39dfd789f841e20fa94d1e387789c9bc.png )
 
 [Understanding Webpack HMR](https://www.javascriptstuff.com/understanding-hmr/ "")
+
+[A Minimal Example of HMR in a Redux Application | Toptal](https://www.toptal.com/javascript/hot-module-replacement-in-redux "")
 
 [webpack与browser-sync热更新原理深度讲解 | louis blog](https://louiszhai.github.io/2017/04/19/hmr/ "")

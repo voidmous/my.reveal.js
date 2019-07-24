@@ -251,6 +251,8 @@ class AsyncSetState extends React.Component {
 
 Note: [Context – React](https://reactjs.org/docs/context.html "")
 
+[Passing Data Between React Components — Parent, Children, Siblings](https://towardsdatascience.com/passing-data-between-react-components-parent-children-siblings-a64f89e24ecf "")
+
 <!-- vertical -->
 
 ```js
@@ -298,7 +300,41 @@ class Child extends React.Component {
 
 ### callback
 
-TODO add example
+```javascript
+class Parent extends React.Component {
+  state = { message: "" }
+
+  callbackFunction = (childData) => {
+    this.setState({ message: childData })
+  }
+
+  render() {
+    return (
+      <div>
+        <Child parentCallback={this.callbackFunction} />
+        <p> {this.state.message} </p>
+      </div>
+    );
+  }
+}
+```
+<!-- vertical -->
+
+```javascript
+class Child extends React.Component {
+  sendData = () => {
+    this.props.parentCallback("Hey dude, How’s it going?");
+  }
+  
+  render() {
+    // you can call function sendData whenever you'd like
+    //  to send data from child component to Parent component.
+  }
+};
+```
+
+* Invasive to child component
+* No way if callback is not exposed or not even exists
 
 <!-- vertical -->
 
@@ -309,7 +345,7 @@ TODO add example
 * Define ref:
 	- `<Child ref="nameInput"/>`
 	- `<Child ref={(input) => this.nameInput = input} />`
-* Using ref is generally not recommended, especially changing DOM
+* Using ref is generally not recommended, especially for modifying DOM or inner state
 
 <!-- vertical -->
 
@@ -380,6 +416,7 @@ const newAdapter = transProps(transPropsFunc)(aComp);
 ## Component Life Cycle
 
 * Mounting -> Updating -> Unmounting
+* Mounting and Unmounting will only run once
 * Hook functions provided by React
 
 <!-- vertical -->
@@ -499,7 +536,7 @@ TODO: when will datagrid be unmounted ?
 <!-- vertical -->
 
 
-## Redux: one-way data flow
+## Redux: unidirectional data flow
 
 ![:scale 100%, ](public/why_use_store.png)
 
@@ -530,7 +567,7 @@ Note:
 * More strict to control data flow than Flux
   - Single source of truth
   - Dispatcher got simplified to `store.dispatch()`
-  - State is read-only (no direct write, dispatch actions)
+  - State is read-only (dispatch actions instead of mutating state directly)
   - Changes are made with pure functions (`reducer`)
 
 Note: 
@@ -553,24 +590,57 @@ Note:
 
 <!-- vertical -->
 
+### State Tree
+
+A simple TODO app state tree
+
+```javascript
+{
+  todos: // todo records by user
+    [
+      {
+        text: 'Eat food',
+        completed: true
+      }, {
+        text: 'Exercise',
+        completed: false
+      }
+    ],
+  visibilityFilter: 'SHOW_COMPLETED'
+  // only show completed records on screen
+}
+```
+
+<!-- vertical -->
+
 ### Action
 
 > An action is a plain JavaScript object that describes in a minimal way what needs to get updated in the application state.
 
+* Action is similar to browser event
 * **type**: string identifier to distinct different actions
 * **payload**: necessary data to be shipped with action
-* Action is similar to browser event
+
 
 <!-- vertical -->
 
+A todo app actions
 ```javascript
-function displayAlert() {
+{ type: 'ADD_TODO', text: 'Go to swimming pool' }
+{ type: 'TOGGLE_TODO', index: 1 }
+{ type: 'SET_VISIBILITY_FILTER', filter: 'SHOW_ALL' }
+```
+
+<!-- vertical -->
+
+Action creator: a function that returns an action
+
+```javascript
+function addTodo(text) {
   return {
-      type: 'DISPLAY_ALERT',
-      payload: {
-        message: 'Something went wrong'
-      }
-  };
+    type: 'ADD_TODO',
+    text
+  }
 }
 ```
 
@@ -580,13 +650,116 @@ function displayAlert() {
 
 > Reducers are **pure functions** which describe state mutations. Unlike actions, reducers do know how to have things changed in the application state, they do know the implementation details for those changes.
 
-* `(prevState, action) => nextState`
+* `reducer = (prevState, action) => nextState`
+* It's called a reducer because it's the type of function you would pass to `Array.prototype.reduce(reducer, initialValue)`
 
+Note:
+
+TODO confirm `Array.prototype.reduce(reducer, initialValue)`
+
+<!-- vertical -->
+
+<img src="public\reducer_deep_or_shallow_clone.png" alt="Should reducer use shallow or deep clone" style="background:none; border:none; box-shadow:none;" height="700px"/>
+
+Note: [Common Redux misconception](https://twitter.com/dan_abramov/status/688087202312491008 )
+
+Not Very Good Example: [Learn-Redux/comments.js at fe1cfae5b2ba5bd7ab23b289cad7b9a6f03c0bd9 · wesbos/Learn-Redux](https://github.com/wesbos/Learn-Redux/blob/fe1cfae5b2ba5bd7ab23b289cad7b9a6f03c0bd9/client/reducers/comments.js "")
+
+Good Example: [Learn-Redux/comments.js at 6ab9f054c289d1bcddbcc79e7429670e0489aaaa · wesbos/Learn-Redux](https://github.com/wesbos/Learn-Redux/blob/6ab9f054c289d1bcddbcc79e7429670e0489aaaa/client/reducers/comments.js "")
+
+<!-- vertical -->
+
+```javascript
+// !! Here we pass in store.getState().todos, not store.getState()
+function todos(state = [], action) {
+  switch (action.type) {
+    case 'ADD_TODO': // add new todo item, default not completed
+      return state.concat([{ text: action.text, completed: false }])
+    case 'TOGGLE_TODO': // reverse item completed status
+      return state.map((todo, index) =>
+        action.index === index
+          ? { text: todo.text, completed: !todo.completed }
+          : todo
+      )
+    default:
+      return state
+  }
+}
+```
+
+<!-- vertical -->
+
+```javascript
+// !! Here we pass in store.getState().visibilityFilter, not store.getState()
+function visibilityFilter(state = 'SHOW_ALL', action) {
+  if (action.type === 'SET_VISIBILITY_FILTER') {
+    return action.filter
+  } else {
+    return state
+  }
+}
+```
+
+<!-- vertical -->
+
+```javascript
+// const initialState = {
+//   visibilityFilter: 'SHOW_ALL',
+//   todos: []
+// }
+function todoApp(state, action) {
+  return {
+    // todos is key name and corresponding reducer function name
+    todos: todos(state.todos, action),
+    visibilityFilter: visibilityFilter(state.visibilityFilter, action)
+  }
+}
+```
+* A combined reducer of `todos` and `visibilityFilter`
+* `todos` and `visibilityFilter` are both state key and reducer for corresponding key
+
+<!-- vertical -->
+
+```javascript
+// equivalent to naive combined reducer
+import { combineReducers } from 'redux';
+
+const todoApp = combineReducers({
+  todos,
+  visibilityFilter
+});
+
+export default todoApp;
+```
+
+<!-- vertical -->
+A simplified version of `combineReducers()`
+
+```javascript
+export default function combineReducers(reducers) {
+  // ... omitted many checks
+  const reducerKeys = Object.keys(reducers)
+
+  return function combination(state = {}, action) {
+    let hasChanged = false
+    const nextState = {}
+    for (let i = 0; i < reducerKeys.length; i++) { // all sub-reducers
+      const key = reducerKeys[i]
+      const reducer = reducers[key]
+      const previousStateForKey = state[key]
+      const nextStateForKey = reducer(previousStateForKey, action)
+      nextState[key] = nextStateForKey
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey
+    }
+    return hasChanged ? nextState : state
+  }
+}
+```
 <!-- vertical -->
 
 ### Store
 
-* Maintain global `state`
+* Maintain global state tree
   - `store.getState()`
   - `store.dispatch(action)`
   - `store.subscribe(listener)`
@@ -595,7 +768,7 @@ function displayAlert() {
 
 ```js
 const listener = () => {
-  console.log('state changed, do something');
+  console.log('state changed, do something', store.getState());
 }
 const unsubscribe = store.subscribe(listener);
 unsubscribe();
@@ -677,7 +850,7 @@ Note:
 
 A simplified version of `Provider`
 
-```js
+```javascript
 export class Provider extends React.Component {
   getChildContext() {
     return {
@@ -703,7 +876,7 @@ Provider.childContextTypes = {
 
 A simplified verison of `connect()`
 
-```js
+```javascript
 export function connect(mapStateToProps, mapDispatchToProps) {
   return function (WrappedComponent) {
     class ConnectedWrappedComponent extends React.Component {
@@ -744,7 +917,7 @@ export function connect(mapStateToProps, mapDispatchToProps) {
 
 `mapStateToProps` and `mapDispatchToProps`
 
-```js
+```javascript
 function mapStateToProps(state) {
   return {
     count: state.counter
@@ -1113,9 +1286,12 @@ Note:
 ## React Start Up
 
 1. Local HTML Template
-2. Online CodePen
+2. Online [CodePen](https://codepen.io/ ""), [CodeSandbox](https://codesandbox.io/ "")
 3. `create-react-app`
   - Recommended
+
+Note:
+[Examples · Redux](https://redux.js.org/introduction/examples "")
 
 <!-- vertical -->
 
@@ -1172,3 +1348,68 @@ $ npm run eject # eject hidden config files and can't revert back
 
 * boilerplate
 * HMR
+
+## Development Tools
+
+<!-- vertical -->
+
+### React Developer Tools
+
+- [facebook/react-devtools ](https://github.com/facebook/react-devtools "")
+- React Developer Tools lets you inspect the React component hierarchy, including component props and state.
+- Browser extension or standalone app
+
+Note: [React Devtools: A Brief Introduction ← Alligator.io](https://alligator.io/react/react-devtools-intro/ "")
+
+<!-- vertical -->
+
+**Usage**
+
+1. install and startup
+```shell
+$ npm install -g react-devtools
+$ react-devtools  # start up as standalone app
+```
+
+2. add communication call to very first `script` tag in the page
+```html
+<!doctype html>
+<html lang="en">
+  <head> <!-- must be first script -->
+    <script src="http://localhost:8097"></script>
+  </head>
+</html>
+```
+
+<!-- vertical -->
+
+![React DOM GIF](https://miro.medium.com/max/700/1*GAPOIeQHhPFS5D0ccHHy7w.gif )
+
+<!-- vertical -->
+
+### Redux DevTools
+
+- [zalmoxisus/redux-devtools-extension](https://github.com/zalmoxisus/redux-devtools-extension "")
+- [gaearon/redux-devtools-log-monitor: The default monitor for Redux DevTools with a tree view](https://github.com/gaearon/redux-devtools-log-monitor ""), logging react component in app
+
+Note: 
+- TODO how to use redux dev tool
+
+<!-- vertical -->
+
+**Redux DevTools Log Monitor**
+
+* Log every action and state change
+* Time travel
+
+<!-- vertical -->
+
+![Redux DevTools Log Monitor](https://camo.githubusercontent.com/a0d66cf145fe35cbe5fb341494b04f277d5d85dd/687474703a2f2f692e696d6775722e636f6d2f4a34476557304d2e676966 )
+
+<!-- vertical -->
+
+### React Performance Devtool
+
+- [nitin42/react-perf-devtool](https://github.com/nitin42/react-perf-devtool "")
+- A browser developer tool extension to inspect performance of React components.
+- [Optimizing Performance – React](https://reactjs.org/docs/optimizing-performance.html "")
