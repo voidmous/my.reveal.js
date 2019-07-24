@@ -396,7 +396,7 @@ function hoc(Comp) {
 const newComp = hoc(aComp);
 ```
 
-<!-- vertical -->
+Note:
 
 ```jsx
 function transProps(transFunc) {
@@ -535,10 +535,11 @@ TODO: when will datagrid be unmounted ?
 
 <!-- vertical -->
 
+# Redux
 
-## Redux: unidirectional data flow
+<!-- vertical -->
 
-![:scale 100%, ](public/why_use_store.png)
+![Why use redux](public/why_use_redux.png)
 
 <!-- vertical -->
 
@@ -576,6 +577,12 @@ Note:
 
 [How Redux Works: A Counter-Example ](https://daveceddia.com/how-does-redux-work/ "") ✔✔✔✔
 
+[Getting Started with Redux · Redux](https://redux.js.org/introduction/getting-started "")
+
+TODO: [Understanding Redux: The World’s Easiest Guide to Beginning Redux](https://www.freecodecamp.org/news/understanding-redux-the-worlds-easiest-guide-to-beginning-redux-c695f45546f6/ "")
+
+[Redux中文文档 · GitBook](http://cn.redux.js.org/index.html "")
+
 <!-- vertical -->
 
 ![Flux Versus Redux](public/flux_vs_redux.jpg)
@@ -592,11 +599,11 @@ Note:
 
 ### State Tree
 
-A simple TODO app state tree
+A simple TODO app state tree, [Try Me](https://codesandbox.io/s/github/reduxjs/redux/tree/master/examples/todos "")
 
 ```javascript
 {
-  todos: // todo records by user
+  todos: // todo records added by user
     [
       {
         text: 'Eat food',
@@ -611,6 +618,8 @@ A simple TODO app state tree
 }
 ```
 
+Note: [Examples · Redux](https://redux.js.org/introduction/examples "")
+
 <!-- vertical -->
 
 ### Action
@@ -624,7 +633,7 @@ A simple TODO app state tree
 
 <!-- vertical -->
 
-A todo app actions
+A TODO app actions
 ```javascript
 { type: 'ADD_TODO', text: 'Go to swimming pool' }
 { type: 'TOGGLE_TODO', index: 1 }
@@ -653,21 +662,65 @@ function addTodo(text) {
 * `reducer = (prevState, action) => nextState`
 * It's called a reducer because it's the type of function you would pass to `Array.prototype.reduce(reducer, initialValue)`
 
-Note:
+<!-- vertical -->
 
-TODO confirm `Array.prototype.reduce(reducer, initialValue)`
+Why call it reducer ?
+
+```javascript
+const countReducer = function (state, action) {
+    if (action.type == 'INCREMENT') {
+        return state + 1;
+    } else if (action.type == 'DECREMENT') {
+        return state - 1;
+    } else {
+        return state;
+    }
+}
+
+// an array of actions
+const actions =
+  [ { type: 'INCREMENT' }
+  , { type: 'INCREMENT' }
+  , { type: 'INCREMENT' }
+  , { type: 'INCREMENT' }
+  , { type: 'DECREMENT' }
+  ]
+
+// initial state
+const initState = 0
+  
+console.log(actions.reduce(countReducer, initState))
+// 3 (final state)
+// (INCREMENT 4 times, DECREMENT 1 time)
+```
+
+Note: 
+
+[javascript - Why is a Redux reducer called a reducer? - Stack Overflow](https://stackoverflow.com/questions/40599496/why-is-a-redux-reducer-called-a-reducer "")
 
 <!-- vertical -->
 
-<img src="public\reducer_deep_or_shallow_clone.png" alt="Should reducer use shallow or deep clone" style="background:none; border:none; box-shadow:none;" height="700px"/>
+Root Reducers
 
-Note: [Common Redux misconception](https://twitter.com/dan_abramov/status/688087202312491008 )
-
-Not Very Good Example: [Learn-Redux/comments.js at fe1cfae5b2ba5bd7ab23b289cad7b9a6f03c0bd9 · wesbos/Learn-Redux](https://github.com/wesbos/Learn-Redux/blob/fe1cfae5b2ba5bd7ab23b289cad7b9a6f03c0bd9/client/reducers/comments.js "")
-
-Good Example: [Learn-Redux/comments.js at 6ab9f054c289d1bcddbcc79e7429670e0489aaaa · wesbos/Learn-Redux](https://github.com/wesbos/Learn-Redux/blob/6ab9f054c289d1bcddbcc79e7429670e0489aaaa/client/reducers/comments.js "")
+```javascript
+const initialState = {
+  todos: [],
+  visibilityFilter: 'SHOW_ALL'
+};
+function todoApp(state = initialState, action) {
+  return {
+    // todos is key name and corresponding reducer function name
+    todos: todos(state.todos, action),
+    visibilityFilter: visibilityFilter(state.visibilityFilter, action)
+  }
+}
+```
+* A combined reducer of `todos` and `visibilityFilter`
+* `todos` and `visibilityFilter` are both state key and reducer for corresponding key
 
 <!-- vertical -->
+
+Split Root Reducer
 
 ```javascript
 // !! Here we pass in store.getState().todos, not store.getState()
@@ -702,38 +755,21 @@ function visibilityFilter(state = 'SHOW_ALL', action) {
 
 <!-- vertical -->
 
-```javascript
-// const initialState = {
-//   visibilityFilter: 'SHOW_ALL',
-//   todos: []
-// }
-function todoApp(state, action) {
-  return {
-    // todos is key name and corresponding reducer function name
-    todos: todos(state.todos, action),
-    visibilityFilter: visibilityFilter(state.visibilityFilter, action)
-  }
-}
-```
-* A combined reducer of `todos` and `visibilityFilter`
-* `todos` and `visibilityFilter` are both state key and reducer for corresponding key
-
-<!-- vertical -->
 
 ```javascript
 // equivalent to naive combined reducer
 import { combineReducers } from 'redux';
 
-const todoApp = combineReducers({
+const todoAppReducer = combineReducers({
   todos,
   visibilityFilter
 });
 
-export default todoApp;
+export default todoAppReducer;
 ```
 
 <!-- vertical -->
-A simplified version of `combineReducers()`
+A simplified verison of `combineReducers()`
 
 ```javascript
 export default function combineReducers(reducers) {
@@ -749,12 +785,30 @@ export default function combineReducers(reducers) {
       const previousStateForKey = state[key]
       const nextStateForKey = reducer(previousStateForKey, action)
       nextState[key] = nextStateForKey
+      // new state object means state changed
       hasChanged = hasChanged || nextStateForKey !== previousStateForKey
     }
     return hasChanged ? nextState : state
   }
 }
 ```
+<!-- vertical -->
+
+* Action need to pass all sub reducers
+* You have to provide `default: return state` in every sub reducer
+
+![Actions Pass ALL Sub Reducers](public\action_pass_reducers.png )
+
+<!-- vertical -->
+
+<img src="public\reducer_deep_or_shallow_clone.png" alt="Should reducer use shallow or deep clone" style="background:none; border:none; box-shadow:none;" height="700px"/>
+
+Note: [Common Redux misconception](https://twitter.com/dan_abramov/status/688087202312491008 )
+
+Not Very Good Example: [Learn-Redux/comments.js at fe1cfae5b2ba5bd7ab23b289cad7b9a6f03c0bd9 · wesbos/Learn-Redux](https://github.com/wesbos/Learn-Redux/blob/fe1cfae5b2ba5bd7ab23b289cad7b9a6f03c0bd9/client/reducers/comments.js "")
+
+Good Example: [Learn-Redux/comments.js at 6ab9f054c289d1bcddbcc79e7429670e0489aaaa · wesbos/Learn-Redux](https://github.com/wesbos/Learn-Redux/blob/6ab9f054c289d1bcddbcc79e7429670e0489aaaa/client/reducers/comments.js "")
+
 <!-- vertical -->
 
 ### Store
@@ -776,7 +830,7 @@ unsubscribe();
 
 <!-- vertical -->
 
-A simplified version of `createStore()`
+A simplified verison of  `createStore()`
 ```js
 function createStore(reducer) {
   let state;
@@ -839,7 +893,6 @@ Note: [createStore · Redux](https://redux.js.org/api/createstore "")
 
 Note:
 
-[A look at the inner workings of Redux - Federico Knüssel - Medium](https://medium.com/@fknussel/redux-3cb5aac94a66 "")
 * [fknussel/redux-from-scratch: Implementing redux, react-redux and redux-thunk from scratch](https://github.com/fknussel/redux-from-scratch?source=post_page--------------------------- "")
 * [    Leveling Up with React: Redux | CSS-Tricks  ](https://css-tricks.com/learning-react-redux/?source=post_page--------------------------- "")
 * [Redux Tutorial by Dan Abramov on egghead.io](https://egghead.io/courses/getting-started-with-redux?source=post_page--------------------------- "")
@@ -848,7 +901,7 @@ Note:
 * [Redux for React: A Simple Introduction - Ross Bulat - Medium](https://medium.com/@rossbulat/redux-for-react-a-simple-introduction-b1f9dcbda8f4 "")
 <!-- vertical -->
 
-A simplified version of `Provider`
+A simplified verison of `Provider`
 
 ```javascript
 export class Provider extends React.Component {
@@ -870,7 +923,17 @@ Provider.childContextTypes = {
 
 <!-- vertical -->
 
-> The purpose of connect is to return a container component which is connected to the store: it injects part of the Redux state and also actions into our components as props, and it’s also part of the react-redux library.
+> The purpose of `connect` is to return a container component which is connected to the store: it injects part of the Redux state and also actions into our components as props, and it’s also part of the react-redux library.
+
+<!-- vertical -->
+
+|                | Presentational Components        | Container Components                           |
+| -------------: | :------------------------------- | ---------------------------------------------- |
+|        Purpose | How things look (markup, styles) | How things work (data fetching, state updates) |
+| Aware of Redux | No                               | Yes                                            |
+|   To read data | Read data from props             | Subscribe to Redux state                       |
+| To change data | Invoke callbacks from props      | Dispatch Redux actions                         |
+|    Are written | By hand                          | Usually generated by React Redux               |
 
 <!-- vertical -->
 
@@ -880,18 +943,12 @@ A simplified verison of `connect()`
 export function connect(mapStateToProps, mapDispatchToProps) {
   return function (WrappedComponent) {
     class ConnectedWrappedComponent extends React.Component {
-      componentDidMount() {
+      componentDidMount = () => {
         const {subscribe} = this.context.store;
         this.unsubscribe = subscribe(this.handleChange.bind(this));
       }
-
-      componentWillUnmount() {
-        this.unsubscribe();
-      }
-
-      handleChange() {
-        this.forceUpdate();
-      }
+      componentWillUnmount = () => { this.unsubscribe(); }
+      handleChange = () => { this.forceUpdate(); }
 
       render() {
         const {getState, dispatch} = this.context.store;
@@ -915,18 +972,18 @@ export function connect(mapStateToProps, mapDispatchToProps) {
 
 <!-- vertical -->
 
-`mapStateToProps` and `mapDispatchToProps`
+> `connect` returns a container component whose props will be the result of merging the objects returned from `mapStateToProps(state[, ownProps])` and `mapDispatchToProps(dispatch[, ownProps])` together with its own props.
 
 ```javascript
 function mapStateToProps(state) {
   return {
-    count: state.counter
+    count: state.counter // this.props.count
   };
 }
 function mapDispatchToProps(dispatch) {
   return {
-    increment: dispatch({ type: 'INCREMENT' }),
-    decrement: dispatch({ type: 'DECREMENT' })
+    increment: dispatch({ type: 'INCREMENT' }), // this.props.increment()
+    decrement: dispatch({ type: 'DECREMENT' })  // this.props.decrement()
   };
 }
 export connect(mapStateToProps, mapDispatchToProps)(Counter);
@@ -934,177 +991,37 @@ export connect(mapStateToProps, mapDispatchToProps)(Counter);
 
 <!-- vertical -->
 
-> Action creators are nothing other than functions returning an object.
+Built-in `bindActionCreators()`
+
+```javascript
+// action creators
+export const increment = () => ({
+  type: 'COUNTER/INCREMENT'
+});
+export const decrement = () => ({
+  type: 'COUNTER/DECREMENT'
+});
+
+
+function mapDispatchToProps(dispatch) {
+  return {
+    increment: () => dispatch(increment()),
+    decrement: () => dispatch(decrement())
+  };
+};
+
+// equivalant to
+import { bindActionCreators } from 'redux'
+const boundActionCreators = bindActionCreators({increment, decrement}, dispatch)
+```
 
 Note: [bindActionCreators · Redux](https://redux.js.org/api/bindactioncreators "")
 
-<!-- vertical -->
-
-```js
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
-
-const initialState = {
-  count: 10
-};
-
-function reducer(state = initialState, action) {
-  switch(action.type) {
-    case 'INCREMENT':
-      return {
-        count: state.count + 1
-      };
-    case 'DECREMENT':
-      return {
-        count: state.count - 1
-      };
-    default:
-      return state;
-  }
-}
-
-const store = createStore(reducer);
-
-render(
-  <Provider store={store}>
-    <Counter />
-  </Provider>
-)
-```
+Action creators are nothing other than functions returning an object.
 
 <!-- vertical -->
 
-```js
-import { connect } from 'react-redux';
-
-function mapStateToProps(state) {
-  return {
-    count: state.count
-  };
-}
-
-class Counter extends React.Component {
-
-	increment = () => {
-		this.props.dispatch({ type: 'INCREMENT'});
-	}
-
-	decrement = () => {
-		this.props.dispatch({ type: 'DECREMENT'});
-	}
-
-	render() {
-		return (
-			<div>
-				<h3>Counter</h3>
-				<div>
-					<button onClick={this.decrement}> - </button>
-					<span>{this.props.count}</span>
-					<button onClick={this.increment}> + </button>
-				</div>
-			</div>
-		)
-	}
-}
-
-export default connect(mapStateToProps)(Counter);
-```
-
-<!-- vertical -->
-
-```js
-import { createStore } from 'redux'
-
-/**
- * This is a reducer, a pure function with (state, action) => state signature.
- * It describes how an action transforms the state into the next state.
- *
- * The shape of the state is up to you: it can be a primitive, an array, an object,
- * or even an Immutable.js data structure. The only important part is that you should
- * not mutate the state object, but return a new object if the state changes.
- *
- * In this example, we use a `switch` statement and strings, but you can use a helper that
- * follows a different convention (such as function maps) if it makes sense for your
- * project.
- */
-function counter(state = 0, action) {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1
-    case 'DECREMENT':
-      return state - 1
-    default:
-      return state
-  }
-}
-
-// Create a Redux store holding the state of your app.
-// Its API is { subscribe, dispatch, getState }.
-let store = createStore(counter)
-
-// You can use subscribe() to update the UI in response to state changes.
-// Normally you'd use a view binding library (e.g. React Redux) rather than subscribe() directly.
-// However it can also be handy to persist the current state in the localStorage.
-
-store.subscribe(() => console.log(store.getState()))
-
-// The only way to mutate the internal state is to dispatch an action.
-// The actions can be serialized, logged or stored and later replayed.
-store.dispatch({ type: 'INCREMENT' })
-// 1
-store.dispatch({ type: 'INCREMENT' })
-// 2
-store.dispatch({ type: 'DECREMENT' })
-// 1
-```
-
-Note:
-
-[Getting Started with Redux · Redux](https://redux.js.org/introduction/getting-started "")
-
-TODO: [Understanding Redux: The World’s Easiest Guide to Beginning Redux](https://www.freecodecamp.org/news/understanding-redux-the-worlds-easiest-guide-to-beginning-redux-c695f45546f6/ "")
-
-这一部分可以参考 [Redux中文文档 · GitBook](http://cn.redux.js.org/index.html "")
-
-<!-- vertical -->
-
-`createStore()` A simplified version
-
-```js
-function createStore(reducer) {
-    var state;
-    var listeners = [];
-
-    function getState() {
-        return state;
-    }
-    
-    function subscribe(listener) {
-        listeners.push(listener);
-        return unsubscribe() {
-            var index = listeners.indexOf(listener)
-            listeners.splice(index, 1)
-        };
-    }
-    
-    function dispatch(action) {
-        state = reducer(state, action);
-        listeners.forEach(listener => listener());
-    }
-+
-    dispatch({type: '@@redux/INIT'}); // initial action
-
-    return { dispatch, subscribe, getState };
-}
-```
-
-<!-- vertical -->
-
-Action
-
-<!-- vertical -->
-
-Action Creator
+A simplified version of `bindActionCreator()`
 
 ```js
 function bindActionCreator(actionCreator, dispatch) {
@@ -1114,13 +1031,6 @@ function bindActionCreator(actionCreator, dispatch) {
 export default function bindActionCreators(actionCreators, dispatch) {
   if (typeof actionCreators === 'function') {
     return bindActionCreator(actionCreators, dispatch)
-  }
-
-  if (typeof actionCreators !== 'object' || actionCreators === null) {
-    throw new Error(
-      `bindActionCreators expected an object or a function, instead received ${actionCreators === null ? 'null' : typeof actionCreators}. ` +
-      `Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?`
-    )
   }
 
   const keys = Object.keys(actionCreators)
@@ -1138,40 +1048,112 @@ export default function bindActionCreators(actionCreators, dispatch) {
 
 <!-- vertical -->
 
-mapStateToProps
-mapDispatchToProps
+<img src="public/redux_thunk_1.gif" alt="Redux Thunk 1" style="background:none; border:none; box-shadow:none;" height="700px"/>
 
 <!-- vertical -->
 
-Reducer
+### Middleware
 
-* `(old_state, action) => new_state`
-* should be pure function, return new object instead of modifing old object
-* design your own state tree, don't nest too deep
-
-Dispatcher
+* Action is plain obejct, reducer has no side effect
+* When should we request data from remote server?
 
 <!-- vertical -->
 
-Middleware
+<img src="public/redux_data_flow.png" alt="Redux Data Flow" style="background:none; border:none; box-shadow:none;" height="700px"/>
+
+<!-- vertical -->
+
+
+Middleware `compose()`
+
+```javascript
+// node_modules/redux/src/compose.js
+
+/**
+ * Composes single-argument functions from right to left. The rightmost
+ * function can take multiple arguments as it provides the signature for
+ * the resulting composite function.
+ *
+ * @param {...Function} funcs The functions to compose.
+ * @returns {Function} A function obtained by composing the argument functions
+ * from right to left. For example, compose(f, g, h) is identical to doing
+ * (...args) => f(g(h(...args))).
+ */
+export default function compose(...funcs) {
+	if (funcs.length === 0) {
+		return arg => arg
+	}
+
+	if (funcs.length === 1) {
+		return funcs[0]
+	}
+	// (f, g) -> f(g(...args)) -> 
+	return funcs.reduce((a, b) => (...args) => a(b(...args)))
+}
+```
+
+<!-- vertical -->
+
+```javascript
+const add1 = x => x + 1;
+const addxy = (x, y) => x + y;
+const mult2 = (x) => x * 2;
+const square = x => x * x;
+compose(square, add1, mult2, addxy)(1, 2);  // 49
+compose(add1, mult2, square, addxy)(0, -1); // 3
+```
+
+<!-- vertical -->
+
+StoreEnhancer `applyMiddleware()`
+
+```javascript
+// node_modules/redux/src/applyMiddleware.js
+export default function applyMiddleware(...middlewares) {
+  return createStore => (...args) => {
+    const store = createStore(...args)
+    let dispatch = () => {
+      throw new Error(
+        'Dispatching while constructing your middleware is not allowed. ' +
+          'Other middleware would not be applied to this dispatch.'
+      )
+    }
+
+    const middlewareAPI = {
+      getState: store.getState,
+      dispatch: (...args) => dispatch(...args)
+    } // pass getState and dispatch to every middleware
+    const chain = middlewares.map(middleware => middleware(middlewareAPI))
+    dispatch = compose(...chain)(store.dispatch) // enhance store.dispatch
+
+    return {
+      ...store,
+      dispatch
+    }
+  }
+}
+```
+
+<!-- vertical -->
 
 ```js
 /**
  * Logs all actions and states after they are dispatched.
  */
 const logger = store => next => action => {
-  console.group(action.type)
-  console.info('dispatching', action)
+  // console.group(action.type)
+  // console.info('dispatching', action)
   let result = next(action)
-  console.log('next state', store.getState())
-  console.groupEnd(action.type)
+  // console.log('next state', store.getState())
+  // console.groupEnd(action.type)
   return result
 }
 
+// enhanced createStore
 let createStoreWithMiddleware = applyMiddleware(logger)(createStore)
 
-let yourApp = combineReducers(reducers)
-let store = createStoreWithMiddleware(yourApp)
+let appRootReducer = combineReducers(reducers)
+let store = createStoreWithMiddleware(appRootReducer)
 ```
 
 Note:
@@ -1180,27 +1162,28 @@ Note:
 
 <!-- vertical -->
 
-Store Enhancer
+###  thunk
 
+> A thunk is a function that wraps an expression to delay its evaluation.
 
+```javascript
+// calculation of 1 + 2 is immediate
+// x === 3
+let x = 1 + 2;
 
-<!-- vertical -->
-
-
-## fetch and thunk
-
-<!-- vertical -->
-
-<img src="public/redux_thunk_1.gif" alt="Redux Thunk 1" style="background:none; border:none; box-shadow:none;" height="700px"/>
-
-<!-- vertical -->
-<img src="public/redux_thunk_2.png" alt="Redux Thunk 2" style="background:none; border:none; box-shadow:none;" height="700px"/>
-
-<!-- vertical -->
-
-<img src="public/redux_data_flow.png" alt="Redux Data Flow" style="background:none; border:none; box-shadow:none;" height="700px"/>
+// calculation of 1 + 2 is delayed
+// foo can be called later to perform the calculation
+// foo is a thunk!
+let foo = () => 1 + 2;
+```
 
 <!-- vertical -->
+
+> Redux Thunk middleware allows you to write action creators that return a function instead of an action. The thunk can be used to delay the dispatch of an action, or to dispatch only if a certain condition is met. The inner function receives the store methods dispatch and getState as parameters.
+
+Note:
+
+[reduxjs/redux-thunk: Thunk middleware for Redux](https://github.com/reduxjs/redux-thunk "")
 
 [淺談 Redux Thunk](https://www.slideshare.net/ssuserc4dc6d1/redux-thunk "")
 
@@ -1209,46 +1192,88 @@ Store Enhancer
 [Quick Start · React Redux](https://react-redux.js.org/introduction/quick-start "")
 
 
-
 [javascript - Fetch API request timeout? - Stack Overflow](https://stackoverflow.com/questions/46946380/fetch-api-request-timeout "")
 
-```js
-// Rough implementation. Untested.
-function timeout(ms, promise) {
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
-      reject(new Error("timeout"))
-    }, ms)
-    promise.then(resolve, reject)
-  })
+<!-- vertical -->
+
+An action creator that returns a function to perform **asynchronous dispatch**
+
+```javascript
+// plain action creator which returns object
+function increment() {
+  return {
+    type: 'INCREMENT_COUNTER'
+  };
 }
 
-timeout(1000, fetch('/hello')).then(function(response) {
-  // process response
-}).catch(function(error) {
-  // might be a timeout error
-})
+// thunk action creator which returns function
+function incrementAsync() {
+  return dispatch => {
+    setTimeout(() => {
+      // Yay! Can invoke sync or async actions with `dispatch`
+      dispatch(increment());
+    }, 1000);
+  };
+}
 ```
 
 <!-- vertical -->
 
-## Common Component
+An action creator that returns a function to perform **conditional dispatch**:
+
+```javascript
+function incrementIfOdd() {
+  return (dispatch, getState) => {
+    const { counter } = getState();
+
+    if (counter % 2 === 0) {
+      return; // action swallowed
+    }
+
+    dispatch(increment());
+  };
+}
+```
 
 <!-- vertical -->
 
-### IntlProvider
+`redux-thunk`
 
-`window.Intl`
+```javascript
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import rootReducer from './reducers/index';
+
+// Note: this API requires redux@>=3.1.0
+const store = createStore(
+  rootReducer,
+  applyMiddleware(thunk) // store enhancer instead of initialState
+);
+```
 
 <!-- vertical -->
 
-### DragNDrop
-
-HTML5 Drag and Drop
-
-### React-Route
+<img src="public/redux_thunk_2.png" alt="Redux Thunk 2" style="background:none; border:none; box-shadow:none;" height="700px"/>
 
 <!-- vertical -->
+
+```javascript
+// redux-thunk
+function createThunkMiddleware(extraArgument) {
+  return ({ dispatch, getState }) => next => action => {
+    if (typeof action === 'function') {
+      return action(dispatch, getState, extraArgument);
+    }
+
+    return next(action);
+  };
+}
+
+const thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+export default thunk;
+```
 
 <!-- vertical -->
 
@@ -1404,9 +1429,9 @@ Note:
 
 <!-- vertical -->
 
-![Redux DevTools Log Monitor](https://camo.githubusercontent.com/a0d66cf145fe35cbe5fb341494b04f277d5d85dd/687474703a2f2f692e696d6775722e636f6d2f4a34476557304d2e676966 )
+![Redux DevTools Log Monitor](public\redux_log_monitor.gif )
 
-<!-- vertical -->
+Note:
 
 ### React Performance Devtool
 

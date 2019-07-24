@@ -104,7 +104,33 @@ console.log(t);  // Uncaught ReferenceError: t is not defined
 console.log(t_); // Uncaught ReferenceError: t_ is not defined
 ```
 
+<!-- vertical -->
 
+### Symbol
+
+* `Symbol('description')`
+* Primary datatype
+* To generate a globally unique value
+* Can be used as object key
+
+<!-- vertical -->
+
+```javascript
+let a1 = Symbol('a');
+let a2 = Symbol('a');
+a1 === a2 // false
+obj[a1] = 'a1';
+
+log.levels = {
+  DEBUG: Symbol('debug'),
+  INFO: Symbol('info'),
+  WARN: Symbol('warn'),
+};
+log(log.levels.DEBUG, 'debug message');
+log(log.levels.INFO, 'info message');
+```
+
+Note: [Metaprogramming in ES6: Symbols and why they're awesome](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/ "")
 
 <!-- vertical -->
 
@@ -182,7 +208,6 @@ A simple `package.json`
 * Even a single misplaced comma or colon can cause a JSON file to go wrong, and not work.
 * No comments allowed for standard (strict) JSON
 * Deep copy object: `JSON.parse(JSON.stringify(obj))`
-* `package.json` and user favorite
 
 Note: [JSON.org](https://www.json.org/ "")
 
@@ -256,21 +281,19 @@ n; // {x: 1, y: 2, a: 3, b: 99}
 <!-- vertical -->
 
 ```js
-// Copy an array
-var arr = [1, 2, 3];
-var arr2 = [...arr]; // like arr.slice()
+// spread operator is shallow copy
+const arr = [1, 2, 3];
+const arr2 = [...arr]; // like arr.slice()
+arr === arr2; // false
 arr2.push(4); 
 // arr2 becomes [1, 2, 3, 4]
 // arr remains unaffected
 
-// !! SPREAD is shallow clone
 const original = {a: {b: 1}};
-const falseCopy = {...original};
-
-falseCopy.a.b = 2;
-
-console.log(falseCopy) // logs {a: {b: 2}}
-console.log(original) // also logs {a: {b: 2}} WTF!
+const copy = {...original};
+copy.a.b = 2;
+console.log(copy);     // {a: {b: 2}}
+console.log(original); // {a: {b: 2}}
 ```
 
 Note: 
@@ -283,8 +306,6 @@ Note:
 
 <!-- vertical -->
 
-### Shallow/Deep Clone Object
-
 ```js
 var oldObject = {
   name: 'A',
@@ -296,21 +317,27 @@ var oldObject = {
 var newObject = JSON.parse(JSON.stringify(oldObject));
 
 newObject.address.city = 'Delhi';
-console.log('newObject');
 console.log(newObject);
-console.log('oldObject');
 console.log(oldObject);
 ```
 
-Note: 
+<!-- vertical -->
 
-[javascript - Deep copy in ES6 using the spread syntax - Stack Overflow](https://stackoverflow.com/questions/38416020/deep-copy-in-es6-using-the-spread-syntax "")
+`Object.assign`
 
-[Spread Operator Does Not Deep Copy Properties - Bambielli’s Blog](https://bambielli.com/til/2017-01-29-spread-operator-deep-copy/ "")
+```js
+let target1 = {a : 1, b : 2};
+let source1 = {b : 2, c : 3};
+let source2 = {b : 5, d : 6};
 
-[Object.assign() - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign "")
-
-[How to deep clone a JavaScript object](https://flaviocopes.com/how-to-clone-javascript-object/ "")
+// Copy properties from each source to the target.
+// Note: this WILL MUTATE THE TARGET!
+Object.assign(target1, source1, source2);
+const target2 = Object.assign({}, source1, source2);
+console.log(target1); // {a : 1, b : 5, c : 3, d : 6}
+console.log(target2); // {b: 5, c: 3, d: 6}
+target1 === target2;
+```
 
 <!-- vertical -->
 
@@ -336,66 +363,60 @@ console.log(arr2); // ["a", "b", "c", "c1", "e"]
 
 <!-- vertical -->
 
-### `Object.assign`
+### Shallow/Deep Copy Object
+* Shallow
+	- spread operator `...`
+	- `Object.assign({}, ...sources)`
+	- `Array.prototype.slice()`
+* Deep
+	- `JSON.parse(JSON.stringify(obj))`
+	- lodash `_.cloneDeep(value)`
 
-```js
-let target1 = {a : 1, b : 2};
-let target2 = {a : 1, b : 2};
-let source1 = {b : 2, c : 3};
-let source2 = {b : 5, d : 6};
+Note: 
 
-// Copy properties from each source to the target.
-// Note: this WILL MUTATE THE TARGET!
-Object.assign(target1, source1, source2);
-console.log(target1);
-// {a : 1, b : 5, c : 3, d : 6}
+[javascript - Deep copy in ES6 using the spread syntax - Stack Overflow](https://stackoverflow.com/questions/38416020/deep-copy-in-es6-using-the-spread-syntax "")
 
-// Can be used to safely create copies if the target is a new object:
-const newObject = Object.assign({}, target2, source1, source2);
+[Spread Operator Does Not Deep Copy Properties - Bambielli’s Blog](https://bambielli.com/til/2017-01-29-spread-operator-deep-copy/ "")
 
-// Result: newObject !== target, and target is unchanged:
-console.log(newObject)
-// {a : 1, b : 5, c : 3, d : 6}
-target1 === newObject; // false
+[Object.assign() - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign "")
 
-console.log(target2);
-// {a : 1, b : 2}
-
-// TODO shallow copy??
-```
+[How to deep clone a JavaScript object](https://flaviocopes.com/how-to-clone-javascript-object/ "")
 
 <!-- vertical -->
 
-### Symbol
-
-
-<!-- vertical -->
-
-
-### Function Extension
-
-<!-- vertical -->
-
-
-#### Arrow Function
+### Arrow Function
 
 * Make function declaration simpler
-* Automatically bind right `this`
-	- Arrow functions cannot be used as constructors and will throw an error when used with new.
-	- TODO
+* Automatically bind `this` of the scope when defined
+* Arrow functions cannot be used as constructors and will throw an error when used with new
 
-Note: [Arrow functions - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions "")
+Note: 
 
+[Arrow functions - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions "")
+
+Default parameter
+
+```js
+// Evaluated at call time
+function append(value, array = []) {
+  array.push(value);
+  return array;
+}
+append(1); //[1]
+append(2); //[2], not [1, 2]
+```
+
+[Default parameters - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters "")
 <!-- vertical -->
 
 ```js
+// with rest operator
 const headAndTail = (head, ...tail) => [head, tail];
 headAndTail(1, 2, 3, 4, 5);
 // [1,[2,3,4,5]]
 
 // ES6 arrow function with destruction assignment
 const full = ({ first, last }) => first + " " + last; // note the {}
-
 // ES5 equivalence
 function full(person) {
 	return person.first + " " + person.last;
@@ -403,13 +424,6 @@ function full(person) {
 ```
 
 <!-- vertical -->
-
-```js
-// TODO
-```
-
-<!-- vertical -->
-
 
 ```js
 // ES6
@@ -434,65 +448,13 @@ function foo() {
 
 <!-- vertical -->
 
-```js
-// use output of prvious function as input of next function
-const pipeline = (...funcs) => value => funcs.reduce( (a, b) => b(a), value);
-
-const plus1 = a => a + 1;
-const mult2 = a => a * 2;
-const square = a => a ** 2;
-
-pipeline(plus1, mult2, square)(5); // 144
-square(mult2(plus1(5))); // 144, equivalence
-pipeline(square, plus1, mult2)(2); // 10
-```
-
-<!-- vertical -->
-
-Currying
-
-```js
-// Currying function
-const add = function (x) {
-  return function (y) {
-    return x + y
-  }
-}
-
-const add = (x, y) => x + y;
-add(2, 3); //=> 5
-
-const add = x => y => x + y; // curried form
-add(2, 3);
-```
-
-<!-- vertical -->
-
-#### Default parameter
-
-```js
-// Evaluated at call time
-function append(value, array = []) {
-  array.push(value);
-  return array;
-}
-append(1); //[1]
-append(2); //[2], not [1, 2]
-```
-
-Note:
-
-[Default parameters - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Default_parameters "")
-
-<!-- vertical -->
-
 ### Promise
 
 * Make callback hell to chaining syntax
 * A promise has 3 states:
-	- Pending
-	- Fulfilled
-	- Rejected
+	- **Pending**	when async operation not finished yet
+	- **Fulfilled**	when async operation *successful*
+	- **Rejected**	when async operation *failed*
 
 Note:
 [Using promises - JavaScript | MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises "")
@@ -500,33 +462,63 @@ Note:
 
 <!-- vertical -->
 
-Both `Promise.prototype.then()` and `Promise.prototype.catch()` return a new Promise object
+```javascript
+// ES6 callback hell
+doSomething(function(result) {
+  doSomethingElse(result, function(newResult) {
+    doThirdThing(newResult, function(finalResult) {
+      console.log('Got the final result: ' + finalResult);
+    }, failureCallback);
+  }, failureCallback);
+}, failureCallback);
 
-```js
-p.then(onFulfilled[, onRejected]);
+// ES6 chaining callback
+doSomething()
+.then(function(result) {
+  return doSomethingElse(result);
+})
+.then(function(newResult) {
+  return doThirdThing(newResult);
+})
+.then(function(finalResult) {
+  console.log('Got the final result: ' + finalResult);
+})
+.catch(failureCallback);
+```
+
+<!-- vertical -->
+
+![Ajax Example](https://i.stack.imgur.com/UZTsC.png )
+
+Note: 
+
+![](https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/10/1445201770asynchronous-javascript02-es6-creating-promise-object.png )
+
+<!-- vertical -->
+
+![Promise Construction](https://en.proft.me/media/js/js_promises.png )
+
+<!-- vertical -->
+
+* `Promise.prototype.then(onFulfilled[, onRejected])`
+* `Promise.prototype.catch(onRejected)`
+	- = `Promise.prototype.then(null, onRejected)`
+* Both return a new Promise object
+
+```javascript
 p.then((value) => {
   // fulfillment
 }, (reason) => {
   // rejection
 });
 
-// equivalent to Promise.prototype.then(null, onRejected)
-p.catch(onRejected);
 p.catch(function(reason) {
    // rejection
 });
 ```
 
-<!-- vertical -->
-
-![Promise Construction](https://en.proft.me/media/js/js_promises.png )
-
 Note:
 [An Introduction to Promises in JS | en.proft.me ](https://en.proft.me/2018/07/24/introduction-promises-js/ "")
-
-<!-- vertical -->
-
-![](https://i.stack.imgur.com/UZTsC.png )
 
 <!-- vertical -->
 
@@ -551,37 +543,6 @@ Resolved
 
 <!-- vertical -->
 
-![](https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2015/10/1445201770asynchronous-javascript02-es6-creating-promise-object.png )
-
-
-
-
-<!-- vertical -->
-
-Chaining Promise
-
-
-<!-- vertical -->
-
-If no error handling callback assigned, errow won't be throw to outer environment!
-
-```js
-// run this in .js file
-let doAsyncTask = function() {
-	return new Promise(function(resolve, reject) {
-		// x is not defined, expected to  raise error at run time
-		resolve(x + 2);
-	});
-};
-
-doAsyncTask().then( () => {
-	console.log('everything is great');
-});
-```
-
-
-<!-- vertical -->
-
 ### `class`
 
 ```js
@@ -597,7 +558,7 @@ class Animal {
 
 class Programmer extends Animal {
 	constructor(name) {
-		super(name); // must have super(): missing super() call in constructor
+		super(name); // must have super() otherwise error
 	}
 
 	program() {
@@ -655,31 +616,25 @@ A = decorator(A) || A;
 <!-- vertical -->
 
 ```js
-// TODO not working
 function dec(id) {
-	console.log('evaluated', id);
-	return (target, property, descriptor) => {
-		console.log('executed', id);
+	console.log('dec entered: ' + id);
+	return function(target) {
+		console.log('dec executed: ' + id);
 	}
 }
 
-class Example {
-	@dec(1)
-	@dec(2)
-	method () { console.log('method'); }
-}
+@dec(1)
+@dec(2)
+class MyClass {}
+// dec entered: 1
+// dec entered: 2
+// dec executed: 2
+// dec executed: 1
 ```
 
 <!-- vertical -->
 
-
-### Functional Programming
-
-<!-- vertical -->
-
-#### First-class Entity
-
-Functions as first-class entities can:
+### Function As First-class Entity
 
 - refer to it from constants and variables
 - pass it as a parameter to other functions
@@ -687,13 +642,55 @@ Functions as first-class entities can:
 
 Note:
 
-TODO Add example of function usage in javascript here
-
 [Functional Programming Principles in Javascript](https://www.freecodecamp.org/news/functional-programming-principles-in-javascript-1b8fc6c3563f/ "")
 
 <!-- vertical -->
 
-#### Pure Function
+> A higher order function is a function that takes a function as an argument, or returns a function.
+
+```javascript
+const sayHello = function() {
+   return function() {
+      console.log("Hello!");
+   }
+}
+
+const myFunc = sayHello();
+myFunc.toString();
+/* 
+function() {
+  console.log("Hello!");
+}
+*/
+myFunc(); // Hello!
+
+sayHello()(); Hello!
+```
+
+<!-- vertical -->
+
+> Currying is a transformation of functions that translates a function from callable as `f(a, b, c)` into callable as `f(a)(b)(c)`
+
+```js
+const common = (x, y, z) => x + y * z;
+common(2, 3, 4); // 14
+
+const curry = x => y => z => x + y * z; // curried form
+curry(2)(3)(4); // 14
+
+// easy to compose functions
+const compose = (f, g) => x => f(g(x));
+const add1 = x => x + 1;
+const mult2 = x => x * 2;
+compose(add1, mult2)(2); // 5
+compose(mult2, add1)(2); // 6
+```
+
+Note: [Curry and Function Composition - JavaScript Scene - Medium](https://medium.com/javascript-scene/curry-and-function-composition-2c208d774983 "")
+
+<!-- vertical -->
+
+### Pure Function
 
 * It returns the same result if given the same arguments
 * It does not cause any observable side effects
@@ -706,6 +703,8 @@ Note:
 
 <!-- vertical -->
 
+### Array Functions
+
 - **`forEach()`**: doesn't return anything, but lets you do something with each original value
 - **`map()`**: creates a new array with one value for each item in the original array
 - **`filter()`**: creates a new array containing only the original values where the callback returned `true`
@@ -713,36 +712,33 @@ Note:
 
 <!-- vertical -->
 
-<!-- ![map filter reduce emoji](./public/map_filter_reduce_emoji.jpg ) -->
-
 <img src="public/map_filter_reduce_emoji.jpg" alt="map filter reduce emoji" style="background:none; border:none; box-shadow:none;" height="600px"/>
 
 Note:
 
-TODO: [Swift Guide to Map Filter Reduce](https://useyourloaf.com/blog/swift-guide-to-map-filter-reduce/ "")
+TODO: 
+
+[Swift Guide to Map Filter Reduce](https://useyourloaf.com/blog/swift-guide-to-map-filter-reduce/ "")
 
 ![Java 8 Streams Cheat Sheet](https://jrebel.com/wp-content/uploads/2016/01/Java-8-Streams-cheat-sheet-v3.png )
 
 <!-- vertical -->
 
 ```js
-// map, reduce, filter
+// forEach, map, reduce, filter
 const values = [3, 5, 8, 10, 13];
-
-const timesTwo = (num) => num * 2;
-const doubledNumbers = values.map(timesTwo);
-// [6, 10, 16, 20, 26]
-
-
-const isEven = (num) => num % 2 === 0;
-const evenNumbers = values.filter(isEven);
-// [8, 10]
-
 
 const logValue = (num) => console.log(num);
 values.forEach(logValue);
 // prints: 3, 5, 8, 10, 13
 
+const timesTwo = (num) => num * 2;
+const doubledNumbers = values.map(timesTwo);
+// [6, 10, 16, 20, 26]
+
+const isEven = (num) => num % 2 === 0;
+const evenNumbers = values.filter(isEven);
+// [8, 10]
 
 const addNumbers = (lastResult, currentValue) => {
     return lastResult + currentValue;
@@ -753,38 +749,70 @@ const sum = values.reduce(addNumbers, 0);
 
 <!-- vertical -->
 
+**pipeline**
+
 ```js
-const numbers = [2, 4, 8, 10];
-const halves = numbers.map(x => x / 2);
-// halves is [1, 2, 4, 5]
+// use output of prvious function as input of next function
+const pipeline = (...funcs) => value => funcs.reduce( (f, g) => g(f), value);
 
-const words = ["spray", "limit", "elite", "exuberant", "destruction", "present"];
-const longWords = words.filter(word => word.length > 6);
-// longWords is ["exuberant", "destruction", "present"]
+const plus1 = a => a + 1;
+const mult2 = a => a * 2;
+const square = a => a ** 2;
 
-const total = [0, 1, 2, 3].reduce((sum, value) => sum + value, 1);
-// total is 7
-
-const compose = (...fns) => x => fns.reduceRight((v, f) => f(v), x);
-const add1 = n => n + 1;
-const double = n => n * 2;
-const add1ThenDouble = compose(
-  double,
-  add1
-);
-add1ThenDouble(2); // 6
-// ((2 + 1 = 3) * 2 = 6)
+pipeline(plus1, mult2, square)(5); // 144
+square(mult2(plus1(5))); // 144, equivalence
+pipeline(square, plus1, mult2)(2); // 10
 ```
 
-Note:
+<!-- vertical -->
 
-[JavaScript Functional Programming — map, filter and reduce](https://medium.com/jsguru/javascript-functional-programming-map-filter-and-reduce-846ff9ba492d "")
+```javascript
+// reduceRight() is reduce() from right to left
+const compose = (...funcs) => x => funcs.reduceRight((y, f) => f(y), x);
 
-[Simplify your JavaScript – Use .map(), .reduce(), and .filter()](https://medium.com/poka-techblog/simplify-your-javascript-use-map-reduce-and-filter-bd02c593cc2d "")
+const trace = label => value => {
+  console.log(`${ label }: ${ value }`);
+  return value;
+};
+
+const g = n => n + 1;
+const f = n => n * 2;
+
+const h = compose(
+  trace('after f'),
+  f,
+  trace('after g'),
+  g
+);
+
+h(20);
+// after g: 21
+// after f: 42
+```
 
 
 <!-- vertical -->
 
+write map using reduce
+1. initial state is `[]`
+2. iterate on target array and append result to accumulator `mappedArray`
+
+```javascript
+if (!Array.prototype.mapUsingReduce) {
+  Array.prototype.mapUsingReduce = function(callback, thisArg) {
+    return this.reduce(function(mappedArray, currentValue, index, array) {
+      mappedArray[index] = callback.call(thisArg, currentValue, index, array);
+      return mappedArray;
+    }, []);
+  };
+}
+
+[1, 2, , 3].mapUsingReduce(
+  (currentValue, index, array) => currentValue + index + array.length
+); // [5, 7, , 10]
+```
+
+<!-- vertical -->
 
 ### Module
 
@@ -863,8 +891,3 @@ console.log('updated obj clone: ', JSON.parse(JSON.stringify(obj)));
 ```
 
 Note: [javascript - Weird behavior with objects &amp; console.log - Stack Overflow](https://stackoverflow.com/questions/23429203/weird-behavior-with-objects-console-log "")
-
-<!-- vertical -->
-
-TypeScript ??
-

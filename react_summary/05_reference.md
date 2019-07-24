@@ -43,7 +43,9 @@ Note:
 
 * [Reactathon Presentations  ·  Mark's Dev Blog  ](https://blog.isquaredsoftware.com/2018/03/presentation-reactathon-redux-fundamentals/ "")
 
-* GWT in Action 2nd Edition (first 4 chapters)
+* [A look at the inner workings of Redux - Federico Knüssel - Medium](https://medium.com/@fknussel/redux-3cb5aac94a66 "")
+
+* GWT in Action 2nd Edition (first 3 chapters)
 
 Note:
 
